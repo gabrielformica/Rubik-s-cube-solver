@@ -213,22 +213,22 @@ void Rubik::turnFrontCCW() {
 
 void Rubik::turnBackCW() {
     //back up corners
-    unsigned char temp1 = this->left[2];
+    unsigned char temp1 = this->right[2];
 
     //turn corners
-    this->left[2] = this->swapXZ(this->right[0]);
-    this->right[0] = this->swapXZ(this->right[6]);
-    this->right[6] = this->swapXZ(this->left[4]);
-    this->left[4] = this->swapXZ(temp1);
-
+    this->right[2] = this->swapXZ(this->left[0]);
+    
+	this->left[0] = this->swapXZ(this->left[6]);
+    this->left[6] = this->swapXZ(this->right[4]);
+    this->right[4] = this->swapXZ(temp1);
     //back up edges
-    temp1 = this->left[3];
+    temp1 = this->right[3];
 
     //turn edges
-    this->left[3] = this->swapXZ(this->middle[0]);
-    this->middle[0] = this->swapXZ(this->right[7]);
-    this->right[7] = this->swapXZ(this->middle[1]);
-    this->middle[1] = this->swapXZ(temp1);
+    this->right[3] = this->swapXZ(this->middle[3]);
+    this->middle[3] = this->swapXZ(this->left[7]);
+    this->left[7] = this->swapXZ(this->middle[2]);
+    this->middle[2] = this->swapXZ(temp1);
 }
 
 
