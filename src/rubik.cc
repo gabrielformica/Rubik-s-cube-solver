@@ -97,7 +97,7 @@ void Rubik::turnRightCCW() {
   */
 
 void Rubik::turnTopCW() {
-    //back up corners with new orientation
+    //back up corners
     unsigned char temp1 = this->left[6];
     unsigned char temp2 = this->right[6];
 
@@ -108,7 +108,7 @@ void Rubik::turnTopCW() {
     this->left[4] = this->swapXY(temp2);
     this->right[4] = this->swapXY(temp1);
 
-    //back up edges with new orientation
+    //back up edges
     temp1 = this->middle[2];
     temp2 = this->right[5];
 
@@ -137,7 +137,27 @@ void Rubik::turnTopCCW() {
   */
 
 void Rubik::turnBottomCW() {
+    //back up corners
+    unsigned char temp1 = this->left[2];
+    unsigned char temp2 = this->right[2];
 
+    //turn corners
+    this->left[2] = this->swapXY(this->left[0]);    
+    this->right[2] = this->swapXY(this->right[0]);
+
+    this->left[0] = this->swapXY(temp2);
+    this->right[0] = this->swapXY(temp1);
+
+    //back up edges
+    temp1 = this->middle[0];
+    temp2 = this->right[1];
+
+    //turn edges
+    this->middle[0] = this->swapXY(this->left[1]);
+    this->right[1] = this->swapXY(temp1);
+
+    this->left[1] = this->swapXY(this->middle[3]);
+    this->middle[3] = this->swapXY(temp2);
 }
 
 
@@ -239,7 +259,14 @@ unsigned char swapXY(unsigned char byte) {
   */
 
 unsigned char swapXZ(unsigned char byte) {
-
+    unsigned char x = byte & '\x04';
+    unsigned char y = byte & '\x02';
+    unsigned char z = byte & '\x01';
+    unsigned char mask = '\xF8';          //11111 000
+    unsigned char newbyte = byte & mask;
+    x = x >> 2;
+    z = z << 2;
+    return newbyte = newbyte | x | y | z;
 }
 
 
@@ -250,5 +277,12 @@ unsigned char swapXZ(unsigned char byte) {
   */
 
 unsigned char swapYZ(unsigned char byte) {
-
+    unsigned char x = byte & '\x04';
+    unsigned char y = byte & '\x02';
+    unsigned char z = byte & '\x01';
+    unsigned char mask = '\xF8';          //11111 000
+    unsigned char newbyte = byte & mask;
+    y = y >> 1;
+    z = z << 1;
+    return newbyte = newbyte | x | y | z;
 }
