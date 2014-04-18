@@ -13,6 +13,11 @@
 #include "rubik.hh"
 using namespace std;
 
+/**
+  * Class constructor
+  */
+
+Rubik::Rubik() {};
 
 /**
   * Turn 90 degrees the left face clockwise
