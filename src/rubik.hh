@@ -18,7 +18,7 @@
 class Rubik {
     public:
         /*
-         * Leftmost 5 bits are for position. Rightmost for orientation
+         * Leftmost 5 bits are for identification. Rightmost for orientation
          * Orientations is given by X,Y,Z tuple represented with 3 bits 
          */
         unsigned char left[8];   //0 to 7 cubie
@@ -43,7 +43,7 @@ class Rubik {
         unsigned char swapXY(unsigned char);
         unsigned char swapXZ(unsigned char);
         unsigned char swapYZ(unsigned char);
-        unsigned int getPosition(unsigned char);
+        unsigned int getId(unsigned char);
         unsigned int getOrientation(unsigned char);
 };
 
