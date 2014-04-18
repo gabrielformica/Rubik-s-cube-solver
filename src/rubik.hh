@@ -23,8 +23,8 @@ class Rubik {
          * Orientations is given by X,Y,Z tuple represented with 3 bits 
          */
         unsigned char left[8];   //0 to 7 cubie
-        unsigned char right[8];  //16 to 19 cubie
-        unsigned char middle[4]; //8 to 15 cubie
+        unsigned char right[8];  //12 to 19 cubie
+        unsigned char middle[4]; //8 to 11 cubie
     public:
         void turnLeftCW();
         void turnLeftCCW();
