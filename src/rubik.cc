@@ -16,7 +16,7 @@ using namespace std;
 
 
 /**
-  * Turn the left face clockwise
+  * Turn 90 degrees the left face clockwise
   */
 
 void turnLeftCW() { 
@@ -25,7 +25,7 @@ void turnLeftCW() {
 
 
 /**
-  * Turn the left face counterclockwise
+  * Turn 90 degrees the left face counterclockwise
   */
 
 void turnLeftCCW() {
@@ -34,7 +34,7 @@ void turnLeftCCW() {
 
 
 /**
-  * Turn the right face clockwise
+  * Turn 90 degrees the right face clockwise
   */
 
 void turnRightCW() {
@@ -43,7 +43,7 @@ void turnRightCW() {
 
 
 /**
-  * Turn the right face counterclockwise
+  * Turn 90 degrees the right face counterclockwise
   */
 
 void turnRightCCW() {
@@ -52,7 +52,7 @@ void turnRightCCW() {
 
 
 /**
-  * Turn the up face clockwise
+  * Turn 90 degrees the up face clockwise
   */
 
 void turnUpCW() {
@@ -61,7 +61,7 @@ void turnUpCW() {
 
 
 /**
-  * Turn the up face counterclockwise
+  * Turn 90 degrees the up face counterclockwise
   */
 
 void turnUpCCW() {
@@ -70,7 +70,7 @@ void turnUpCCW() {
 
 
 /**
-  * Turn the down face clockwise
+  * Turn 90 degrees the down face clockwise
   */
 
 void turnDownCW() {
@@ -79,7 +79,7 @@ void turnDownCW() {
 
 
 /**
-  * Turn the down face counterclockwise
+  * Turn 90 degrees the down face counterclockwise
   */
 
 void turnDownCCW() {
@@ -88,7 +88,7 @@ void turnDownCCW() {
 
 
 /**
-  * Turn the front face clockwise
+  * Turn 90 degrees the front face clockwise
   */
 
 void turnFrontCW() {
@@ -97,7 +97,7 @@ void turnFrontCW() {
 
 
 /**
-  * Turn the front face counterclockwise
+  * Turn 90 degrees the front face counterclockwise
   */
 
 void turnFrontCCW() {
@@ -106,7 +106,7 @@ void turnFrontCCW() {
 
 
 /**
-  * Turn the back face clockwise
+  * Turn 90 degrees the back face clockwise
   */
 
 void turnBackCW() {
@@ -115,7 +115,7 @@ void turnBackCW() {
 
 
 /**
-  * Turn the back face counterclockwise
+  * Turn 90 degrees the back face counterclockwise
   */
 
 void turnBackCCW() {
@@ -142,4 +142,37 @@ unsigned int getPosition(unsigned char byte) {
 
 unsigned int getOrientation(unsigned char byte) {
     return (int) byte & '\x07';
+}
+
+
+/**
+  * Swap X and Y axis
+  * @param 'byte': unsigned char that represents position and orientation
+  * @return new byte with same position but different orientation
+  */
+
+unsigned char swapXY(unsigned char byte) {
+
+}
+
+
+/**
+  * Swap X and Z axis
+  * @param 'byte': unsigned char that represents position and orientation
+  * @return new byte with same position but different orientation
+  */
+
+unsigned char swapXZ(unsigned char byte) {
+
+}
+
+
+/**
+  * Swap Y and Z axis
+  * @param 'byte': unsigned char that represents position and orientation
+  * @return new byte with same position but different orientation
+  */
+
+unsigned char swapYZ(unsigned char byte) {
+
 }

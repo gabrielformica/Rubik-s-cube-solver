@@ -18,9 +18,13 @@
 
 class Rubik {
     private:
-        unsigned char left[8];
-        unsigned char right[8];
-        unsigned char middle[4];
+        /*
+         * Leftmost 5 bits are for position. Rightmost for orientation
+         * Orientations is given by X,Y,Z tuple represented with 3 bits 
+         */
+        unsigned char left[8];   //0 to 7 cubie
+        unsigned char right[8];  //16 to 19 cubie
+        unsigned char middle[4]; //8 to 15 cubie
     public:
         void turnLeftCW();
         void turnLeftCCW();
@@ -35,6 +39,9 @@ class Rubik {
         void turnBackCW();
         void turnBackCCW();
     private:
+        unsigned char swapXY(unsigned char);
+        unsigned char swapXZ(unsigned char);
+        unsigned char swapYZ(unsigned char);
         unsigned int getPosition(unsigned char);
         unsigned int getOrientation(unsigned char);
 };
