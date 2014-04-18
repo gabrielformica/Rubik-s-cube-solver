@@ -222,7 +222,14 @@ unsigned char swapXY(unsigned char byte) {
   */
 
 unsigned char swapXZ(unsigned char byte) {
-
+    unsigned char x = byte & '\x04';
+    unsigned char y = byte & '\x02';
+    unsigned char z = byte & '\x01';
+    unsigned char mask = '\xF8';          //11111 000
+    unsigned char newbyte = byte & mask;
+    x = x >> 2;
+    z = z << 2;
+    return newbyte = newbyte | x | y | z;
 }
 
 
@@ -233,5 +240,12 @@ unsigned char swapXZ(unsigned char byte) {
   */
 
 unsigned char swapYZ(unsigned char byte) {
-
+    unsigned char x = byte & '\x04';
+    unsigned char y = byte & '\x02';
+    unsigned char z = byte & '\x01';
+    unsigned char mask = '\xF8';          //11111 000
+    unsigned char newbyte = byte & mask;
+    y = y >> 1;
+    z = z << 1;
+    return newbyte = newbyte | x | y | z;
 }
