@@ -15,9 +15,8 @@
 /*
  * Rubik's cube class
  */
-
 class Rubik {
-    private:
+    public:
         /*
          * Leftmost 5 bits are for position. Rightmost for orientation
          * Orientations is given by X,Y,Z tuple represented with 3 bits 
@@ -25,7 +24,9 @@ class Rubik {
         unsigned char left[8];   //0 to 7 cubie
         unsigned char right[8];  //12 to 19 cubie
         unsigned char middle[4]; //8 to 11 cubie
-    public:
+
+
+	public:
         void turnLeftCW();
         void turnLeftCCW();
         void turnRightCW();

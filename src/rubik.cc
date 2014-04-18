@@ -11,7 +11,6 @@
 
 #include <string>
 #include "rubik.hh"
-
 using namespace std;
 
 
@@ -29,7 +28,7 @@ void Rubik::turnLeftCW() {
     this->left[2] = temp1;
 
 	this->left[6] = this->left[4];
-   	this->left[4] = this->temp2;
+   	this->left[4] = temp2;
     
     //back up edges position
     temp1 = this->left[7];
@@ -67,7 +66,7 @@ void Rubik::turnRightCW() {
     this->right[4] = this->right[2];
 
 	this->right[2] = this->right[0];
-   	this->right[0] = this->temp1;
+   	this->right[0] = temp1;
     
     //back up edges position
     temp1 = this->right[7];
@@ -240,7 +239,7 @@ unsigned int getOrientation(unsigned char byte) {
   * @return new byte with same position but different orientation
   */
 
-unsigned char swapXY(unsigned char byte) {
+unsigned char Rubik::swapXY(unsigned char byte) {
     unsigned char x = byte & '\x04';
     unsigned char y = byte & '\x02';
     unsigned char z = byte & '\x01';
