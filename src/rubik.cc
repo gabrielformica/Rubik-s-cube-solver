@@ -20,26 +20,24 @@ using namespace std;
   */
 
 void Rubik::turnLeftCW() { 
-	//back up corners position
+    //back up corners position
     unsigned char temp1 = this->left[0];
-    unsigned char temp2 = this->left[2];
 
     //turn corners
-    this->left[0] = this->left[6];    
-    this->left[2] = temp1;
+    this->left[0] = this->swapYZ(this->left[2]);    
+    this->left[2] = this->swapYZ(this->left[4]);
+    this->left[4] = this->swapYZ(this->left[6]);
+    this->left[6] = this->swapYZ(temp1);
 
-	this->left[6] = this->left[4];
-   	this->left[4] = this->temp2;
     
     //back up edges position
-    temp1 = this->left[7];
+    temp1 = this->left[1];
 
     //turn edges
-    this->left[7] = this->left[5];
-    this->left[5] = this->left[3];
-
-    this->left[3] = this->left[1];
-    this->left[1] = temp1;
+    this->left[1] = this->swapYZ(this->left[3]);
+    this->left[3] = this->swapYZ(this->left[5]);
+    this->left[5] = this->swapYZ(this->left[7]);
+    this->left[7] = this->swapYZ(temp1);
 }
 
 
@@ -59,25 +57,23 @@ void Rubik::turnLeftCCW() {
   */
 
 void Rubik::turnRightCW() {
-	//back up corners position
-    unsigned char temp1 = this->right[6];
+    //back up corners position
+    unsigned char temp1 = this->right[0];
 
     //turn corners
-    this->right[6] = this->right[4];    
-    this->right[4] = this->right[2];
-
-	this->right[2] = this->right[0];
-   	this->right[0] = this->temp1;
+    this->right[0] = this->swapYZ(this->right[2]);    
+    this->right[2] = this->swapYZ(this->right[4]);
+    this->right[4] = this->swapYZ(this->right[6]);
+    this->right[6] = this->swapYZ(temp1);
     
     //back up edges position
-    temp1 = this->right[7];
+    temp1 = this->right[1];
 
     //turn edges
-    this->right[7] = this->right[5];
-    this->right[5] = this->right[3];
-
-    this->right[3] = this->right[1];
-    this->right[1] = temp1;
+    this->right[1] = this->swapYZ(this->right[3]);
+    this->right[3] = this->swapYZ(this->right[5]);
+    this->right[5] = this->swapYZ(this->right[7]);
+    this->right[7] = this->swapYZ(temp1);
 }
 
 
@@ -214,18 +210,18 @@ void Rubik::turnBackCCW() {
 
 /**
   * Get last 5 bits from byte
-  * @param 'byte': unsigned char that represents position and orientation
-  * @return position
+  * @param 'byte': unsigned char that represents identification and orientation
+  * @return identification
   */
 
-unsigned int getPosition(unsigned char byte) {
+unsigned int getId(unsigned char byte) {
     return (int) byte >> 3;
 }
 
 
 /**
   * Get last 5 bits from byte
-  * @param 'byte': unsigned char that represents position and orientation
+  * @param 'byte': unsigned char that represents identification and orientation
   * @return orientation 
   */
 
@@ -236,8 +232,8 @@ unsigned int getOrientation(unsigned char byte) {
 
 /**
   * Swap X and Y axis
-  * @param 'byte': unsigned char that represents position and orientation
-  * @return new byte with same position but different orientation
+  * @param 'byte': unsigned char that represents identification and orientation
+  * @return new byte with same identification but different orientation
   */
 
 unsigned char swapXY(unsigned char byte) {
@@ -254,8 +250,8 @@ unsigned char swapXY(unsigned char byte) {
 
 /**
   * Swap X and Z axis
-  * @param 'byte': unsigned char that represents position and orientation
-  * @return new byte with same position but different orientation
+  * @param 'byte': unsigned char that represents identification and orientation
+  * @return new byte with same identification but different orientation
   */
 
 unsigned char swapXZ(unsigned char byte) {
@@ -272,8 +268,8 @@ unsigned char swapXZ(unsigned char byte) {
 
 /**
   * Swap Y and Z axis
-  * @param 'byte': unsigned char that represents position and orientation
-  * @return new byte with same position but different orientation
+  * @param 'byte': unsigned char that represents identification and orientation
+  * @return new byte with same identification but different orientation
   */
 
 unsigned char swapYZ(unsigned char byte) {
