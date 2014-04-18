@@ -20,7 +20,26 @@ using namespace std;
   */
 
 void Rubik::turnLeftCW() { 
+	//back up corners position
+    unsigned char temp1 = this->left[0];
+    unsigned char temp2 = this->left[2];
 
+    //turn corners
+    this->left[0] = this->left[6];    
+    this->left[2] = temp1;
+
+	this->left[6] = this->left[4];
+   	this->left[4] = this->temp2;
+    
+    //back up edges position
+    temp1 = this->left[7];
+
+    //turn edges
+    this->left[7] = this->left[5];
+    this->left[5] = this->left[3];
+
+    this->left[3] = this->left[1];
+    this->left[1] = temp1;
 }
 
 
@@ -40,7 +59,25 @@ void Rubik::turnLeftCCW() {
   */
 
 void Rubik::turnRightCW() {
+	//back up corners position
+    unsigned char temp1 = this->right[6];
 
+    //turn corners
+    this->right[6] = this->right[4];    
+    this->right[4] = this->right[2];
+
+	this->right[2] = this->right[0];
+   	this->right[0] = this->temp1;
+    
+    //back up edges position
+    temp1 = this->right[7];
+
+    //turn edges
+    this->right[7] = this->right[5];
+    this->right[5] = this->right[3];
+
+    this->right[3] = this->right[1];
+    this->right[1] = temp1;
 }
 
 
