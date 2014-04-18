@@ -56,16 +56,36 @@ void Rubik::turnRightCCW() {
 
 
 /**
-  * Turn 90 degrees the up face clockwise
+  * Turn 90 degrees the top face clockwise
   */
 
 void Rubik::turnTopCW() {
+    //back up corners with new orientation
+    unsigned char temp1 = this->left[6];
+    unsigned char temp2 = this->right[6];
 
+    //turn corners
+    this->left[6] = this->swapXY(this->left[4]);    
+    this->right[6] = this->swapXY(this->right[4]);
+
+    this->left[4] = this->swapXY(temp2);
+    this->right[4] = this->swapXY(temp1);
+
+    //back up edges with new orientation
+    temp1 = this->middle[2];
+    temp2 = this->right[5];
+
+    //turn edges
+    this->middle[2] = this->swapXY(this->left[5]);
+    this->right[5] = this->swapXY(temp1);
+
+    this->left[5] = this->swapXY(this->middle[1]);
+    this->middle[1] = this->swapXY(temp2);
 }
 
 
 /**
-  * Turn 90 degrees the up face counterclockwise
+  * Turn 90 degrees the top face counterclockwise
   */
 
 void Rubik::turnTopCCW() {
@@ -76,7 +96,7 @@ void Rubik::turnTopCCW() {
 
 
 /**
-  * Turn 90 degrees the down face clockwise
+  * Turn 90 degrees the bottom face clockwise
   */
 
 void Rubik::turnBottomCW() {
@@ -85,7 +105,7 @@ void Rubik::turnBottomCW() {
 
 
 /**
-  * Turn 90 degrees the down face counterclockwise
+  * Turn 90 degrees the bottom face counterclockwise
   */
 
 void Rubik::turnBottomCCW() {
