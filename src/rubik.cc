@@ -19,7 +19,7 @@ using namespace std;
   * Turn 90 degrees the left face clockwise
   */
 
-void turnLeftCW() { 
+void Rubik::turnLeftCW() { 
 
 }
 
@@ -28,8 +28,10 @@ void turnLeftCW() {
   * Turn 90 degrees the left face counterclockwise
   */
 
-void turnLeftCCW() {
-
+void Rubik::turnLeftCCW() {
+    this->turnLeftCW();
+    this->turnLeftCW();
+    this->turnLeftCW();
 }
 
 
@@ -37,7 +39,7 @@ void turnLeftCCW() {
   * Turn 90 degrees the right face clockwise
   */
 
-void turnRightCW() {
+void Rubik::turnRightCW() {
 
 }
 
@@ -46,8 +48,10 @@ void turnRightCW() {
   * Turn 90 degrees the right face counterclockwise
   */
 
-void turnRightCCW() {
-
+void Rubik::turnRightCCW() {
+    this->turnRightCW();
+    this->turnRightCW();
+    this->turnRightCW();
 }
 
 
@@ -55,7 +59,7 @@ void turnRightCCW() {
   * Turn 90 degrees the up face clockwise
   */
 
-void turnUpCW() {
+void Rubik::turnTopCW() {
 
 }
 
@@ -64,8 +68,10 @@ void turnUpCW() {
   * Turn 90 degrees the up face counterclockwise
   */
 
-void turnUpCCW() {
-
+void Rubik::turnTopCCW() {
+    this->turnTopCW();
+    this->turnTopCW();
+    this->turnTopCW();
 }
 
 
@@ -73,7 +79,7 @@ void turnUpCCW() {
   * Turn 90 degrees the down face clockwise
   */
 
-void turnDownCW() {
+void Rubik::turnBottomCW() {
 
 }
 
@@ -82,8 +88,10 @@ void turnDownCW() {
   * Turn 90 degrees the down face counterclockwise
   */
 
-void turnDownCCW() {
-
+void Rubik::turnBottomCCW() {
+    this->turnBottomCW();
+    this->turnBottomCW();
+    this->turnBottomCW();
 }
 
 
@@ -91,7 +99,7 @@ void turnDownCCW() {
   * Turn 90 degrees the front face clockwise
   */
 
-void turnFrontCW() {
+void Rubik::turnFrontCW() {
 
 }
 
@@ -100,8 +108,10 @@ void turnFrontCW() {
   * Turn 90 degrees the front face counterclockwise
   */
 
-void turnFrontCCW() {
-
+void Rubik::turnFrontCCW() {
+    this->turnFrontCW();
+    this->turnFrontCW();
+    this->turnFrontCW();
 }
 
 
@@ -109,7 +119,7 @@ void turnFrontCCW() {
   * Turn 90 degrees the back face clockwise
   */
 
-void turnBackCW() {
+void Rubik::turnBackCW() {
     
 }
 
@@ -118,8 +128,10 @@ void turnBackCW() {
   * Turn 90 degrees the back face counterclockwise
   */
 
-void turnBackCCW() {
-
+void Rubik::turnBackCCW() {
+    this->turnBackCW();
+    this->turnBackCW();
+    this->turnBackCW();
 }
 
 
@@ -152,7 +164,14 @@ unsigned int getOrientation(unsigned char byte) {
   */
 
 unsigned char swapXY(unsigned char byte) {
-
+    unsigned char x = byte & '\x04';
+    unsigned char y = byte & '\x02';
+    unsigned char z = byte & '\x01';
+    unsigned char mask = '\xF8';          //11111 000
+    unsigned char newbyte = byte & mask;
+    x = x >> 1;
+    y = y << 1;
+    return newbyte = newbyte | x | y | z;
 }
 
 
