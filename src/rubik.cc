@@ -242,6 +242,14 @@ void Rubik::turnBackCCW() {
     this->turnBackCW();
 }
 
+/**
+  * Check if cube is solved
+  * @return True if cube is solved. False in any other case
+  */
+
+bool Rubik::isSolved() {
+};
+
 
 /**
   * Get last 5 bits from byte

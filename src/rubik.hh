@@ -38,6 +38,7 @@ class Rubik {
         void turnFrontCCW();
         void turnBackCW();
         void turnBackCCW();
+        bool isSolved();
     private:
         unsigned char swapXY(unsigned char);
         unsigned char swapXZ(unsigned char);
