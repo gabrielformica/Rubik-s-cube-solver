@@ -217,10 +217,10 @@ void Rubik::turnBackCW() {
 
     //turn corners
     this->right[2] = this->swapXZ(this->left[0]);
-    
-	this->left[0] = this->swapXZ(this->left[6]);
+    this->left[0] = this->swapXZ(this->left[6]);
     this->left[6] = this->swapXZ(this->right[4]);
     this->right[4] = this->swapXZ(temp1);
+
     //back up edges
     temp1 = this->right[3];
 

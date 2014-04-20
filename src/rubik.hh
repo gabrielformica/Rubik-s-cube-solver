@@ -10,13 +10,12 @@
 
 #ifndef RUBIK_HH
 #define RUBIK_HH
-#include <string>
 
 /*
  * Rubik's cube class
  */
 class Rubik {
-    public:
+    private:
         /*
          * Leftmost 5 bits are for identification. Rightmost for orientation
          * Orientations is given by X,Y,Z tuple represented with 3 bits 
@@ -25,7 +24,7 @@ class Rubik {
         unsigned char middle[4]; //8 to 11 cubie
         unsigned char right[8];  //12 to 19 cubie
 
-	public:
+    public:
         Rubik();
         void turnLeftCW();
         void turnLeftCCW();
