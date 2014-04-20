@@ -242,14 +242,119 @@ void Rubik::turnBackCCW() {
     this->turnBackCW();
 }
 
+
 /**
   * Check if cube is solved
   * @return True if cube is solved. False in any other case
   */
 
 bool Rubik::isSolved() {
+    bool p = this->checkLeftFace();
+    bool q = this->checkRightFace();
+    bool r = this->checkMiddleFace();
+    return p && q && r;
 };
 
+
+/**
+  * Check that the left face is correctly solved
+  * @return True if correctly solved. False in any other case
+  *
+  * @section Description
+  * The left face is correctly solved when:
+  *         Cubie           ID         Orientation
+  *     this->left[0]     00000            001             
+  *     this->left[1]     00001            001             
+  *     this->left[2]     00010            001
+  *     this->left[3]     00011            010
+  *     this->left[4]     00100            001
+  *     this->left[5]     00101            001
+  *     this->left[6]     00110            001
+  *     this->left[7]     00111            010
+  */
+
+bool Rubik::checkLeftFace() {
+    int i;
+    for (i = 0; i < 8 ; i++) {
+        //check positions
+        if (getId(this->left[i]) != i) 
+            return false;
+
+        //check orientations
+        if ((i % 4 == 3) && (this->getOrientation(this->left[i]) != 2))
+            return false;
+        else if ((i % 4 != 3) && (this->getOrientation(this->left[i]) != 1))
+            return false;
+    } 
+
+    return true;
+}
+
+
+/**
+  * Check that the right face is correctly solved
+  * @return True if correctly solved. False in any other case
+  *
+  * @section Description
+  * The right face is correctly solved when:
+  *         Cubie           ID         Orientation
+  *     this->Right[0]     01000            001             
+  *     this->Right[1]     01001            001             
+  *     this->Right[2]     01010            001
+  *     this->Right[3]     01011            010
+  *     this->Right[4]     01100            001
+  *     this->Right[5]     01101            001
+  *     this->Right[6]     01110            001
+  *     this->Right[7]     01111            010
+  */
+
+bool Rubik::checkRightFace() {
+    int i;
+
+    for (i = 8; i < 16; i++) {
+        //check positions
+        if (getId(this->right[i % 8]) != i) 
+            return false;
+        
+        //check orientations
+        if ((i % 4 == 3) && (this->getOrientation(this->right[i % 8]) != 2))
+            return false;
+        else if ((i % 4 != 3) && (this->getOrientation(this->right[i % 8]) != 1))
+            return false;
+    }
+
+    return true;
+}
+
+
+/**
+  * Check that the middle face is correctly solved
+  * @return True if correctly solved. False in any other case
+  *
+  * @section Description
+  * The middle face is correctly solved when:
+  *         Cubie           ID         Orientation
+  *     this->middle[0]     10000            001             
+  *     this->middle[1]     10001            001             
+  *     this->middle[2]     10010            001
+  *     this->middle[3]     10011            001
+  */
+
+bool Rubik::checkMiddleFace() {
+    int i;
+
+    for (i = 16; i < 20; i++) {
+        //check positions
+        if (this->getId(this->middle[i % 8]) != i)
+            return false;
+
+        //check orientations
+        if (this->getOrientation(this->middle[i % 8]) != 1) 
+            return false;
+    }
+
+    return true;
+}
 
 /**
   * Get last 5 bits from byte
@@ -257,7 +362,7 @@ bool Rubik::isSolved() {
   * @return identification
   */
 
-unsigned int getId(unsigned char byte) {
+unsigned int Rubik::getId(unsigned char byte) {
     return (int) byte >> 3;
 }
 
@@ -268,7 +373,7 @@ unsigned int getId(unsigned char byte) {
   * @return orientation 
   */
 
-unsigned int getOrientation(unsigned char byte) {
+unsigned int Rubik::getOrientation(unsigned char byte) {
     return (int) byte & '\x07';
 }
 

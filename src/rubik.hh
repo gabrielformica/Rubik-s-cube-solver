@@ -21,8 +21,8 @@ class Rubik {
          * Orientations is given by X,Y,Z tuple represented with 3 bits 
          */
         unsigned char left[8];   //0 to 7 cubie
-        unsigned char middle[4]; //8 to 11 cubie
-        unsigned char right[8];  //12 to 19 cubie
+        unsigned char right[8];  //8 to 15 cubie
+        unsigned char middle[4]; //16 to 19 cubie
 
     public:
         Rubik();
@@ -45,6 +45,9 @@ class Rubik {
         unsigned char swapYZ(unsigned char);
         unsigned int getId(unsigned char);
         unsigned int getOrientation(unsigned char);
+        bool checkLeftFace();
+        bool checkRightFace();
+        bool checkMiddleFace();
 };
 
 #endif
