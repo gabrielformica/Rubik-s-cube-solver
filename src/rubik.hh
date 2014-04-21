@@ -27,18 +27,12 @@ class Rubik {
     public:
         Rubik();
         Rubik *clone();
-        void turnLeftCW();
-        void turnLeftCCW();
-        void turnRightCW();
-        void turnRightCCW();
-        void turnTopCW();
-        void turnTopCCW();
-        void turnBottomCW();
-        void turnBottomCCW();
-        void turnFrontCW();
-        void turnFrontCCW();
-        void turnBackCW();
-        void turnBackCCW();
+        void turnLeft();
+        void turnRight();
+        void turnTop();
+        void turnBottom();
+        void turnFront();
+        void turnBack();
         bool isSolved();
     private:
         unsigned char swapXY(unsigned char);

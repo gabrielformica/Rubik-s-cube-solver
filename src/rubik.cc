@@ -47,7 +47,7 @@ Rubik *Rubik::clone() {
   * Turn 90 degrees the left face clockwise
   */
 
-void Rubik::turnLeftCW() { 
+void Rubik::turnLeft() { 
     //back up corners position
     unsigned char temp1 = this->left[0];
 
@@ -69,21 +69,10 @@ void Rubik::turnLeftCW() {
 
 
 /**
-  * Turn 90 degrees the left face counterclockwise
-  */
-
-void Rubik::turnLeftCCW() {
-    this->turnLeftCW();
-    this->turnLeftCW();
-    this->turnLeftCW();
-}
-
-
-/**
   * Turn 90 degrees the right face clockwise
   */
 
-void Rubik::turnRightCW() {
+void Rubik::turnRight() {
     //back up corners position
     unsigned char temp1 = this->right[0];
 
@@ -105,21 +94,10 @@ void Rubik::turnRightCW() {
 
 
 /**
-  * Turn 90 degrees the right face counterclockwise
-  */
-
-void Rubik::turnRightCCW() {
-    this->turnRightCW();
-    this->turnRightCW();
-    this->turnRightCW();
-}
-
-
-/**
   * Turn 90 degrees the top face clockwise
   */
 
-void Rubik::turnTopCW() {
+void Rubik::turnTop() {
     //back up corners
     unsigned char temp1 = this->left[6];
     unsigned char temp2 = this->right[6];
@@ -145,21 +123,10 @@ void Rubik::turnTopCW() {
 
 
 /**
-  * Turn 90 degrees the top face counterclockwise
-  */
-
-void Rubik::turnTopCCW() {
-    this->turnTopCW();
-    this->turnTopCW();
-    this->turnTopCW();
-}
-
-
-/**
   * Turn 90 degrees the bottom face clockwise
   */
 
-void Rubik::turnBottomCW() {
+void Rubik::turnBottom() {
     //back up corners
     unsigned char temp1 = this->left[2];
     unsigned char temp2 = this->right[2];
@@ -185,21 +152,10 @@ void Rubik::turnBottomCW() {
 
 
 /**
-  * Turn 90 degrees the bottom face counterclockwise
-  */
-
-void Rubik::turnBottomCCW() {
-    this->turnBottomCW();
-    this->turnBottomCW();
-    this->turnBottomCW();
-}
-
-
-/**
   * Turn 90 degrees the front face clockwise
   */
 
-void Rubik::turnFrontCW() {
+void Rubik::turnFront() {
     //back up corners
     unsigned char temp1 = this->left[2];
 
@@ -221,21 +177,10 @@ void Rubik::turnFrontCW() {
 
 
 /**
-  * Turn 90 degrees the front face counterclockwise
-  */
-
-void Rubik::turnFrontCCW() {
-    this->turnFrontCW();
-    this->turnFrontCW();
-    this->turnFrontCW();
-}
-
-
-/**
   * Turn 90 degrees the back face clockwise
   */
 
-void Rubik::turnBackCW() {
+void Rubik::turnBack() {
     //back up corners
     unsigned char temp1 = this->right[2];
 
@@ -253,17 +198,6 @@ void Rubik::turnBackCW() {
     this->middle[3] = this->swapXZ(this->left[7]);
     this->left[7] = this->swapXZ(this->middle[2]);
     this->middle[2] = this->swapXZ(temp1);
-}
-
-
-/**
-  * Turn 90 degrees the back face counterclockwise
-  */
-
-void Rubik::turnBackCCW() {
-    this->turnBackCW();
-    this->turnBackCW();
-    this->turnBackCW();
 }
 
 
