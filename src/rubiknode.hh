@@ -29,6 +29,7 @@ class RubikNode {
         RubikNode(Rubik *,RubikNode *,char,int);
         RubikNode *init(Rubik *state);
         bool isGoal();
+        void generateSucc();
         std::list<char> extractSolution(); 
 };
 

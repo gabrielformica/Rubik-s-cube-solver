@@ -26,6 +26,7 @@ class Rubik {
 
     public:
         Rubik();
+        Rubik *clone();
         void turnLeftCW();
         void turnLeftCCW();
         void turnRightCW();

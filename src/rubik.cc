@@ -13,11 +13,35 @@
 #include "rubik.hh"
 using namespace std;
 
+
 /**
   * Class constructor
   */
 
 Rubik::Rubik() {};
+
+
+/**
+  * Clone this Rubik's cube
+  * @return A clone of this Rubik's cube
+  */
+
+Rubik *Rubik::clone() {
+    Rubik *clone = new Rubik();
+    int i;
+
+    for (i = 0; i < 8; i++) {
+        clone->left[i] = this->left[i];
+        clone->right[i] = this->right[i];
+    }
+
+    for (i = 0; i < 4; i++) {
+        clone->middle[i] = this->middle[i];
+    }
+
+    return clone;
+};
+
 
 /**
   * Turn 90 degrees the left face clockwise
@@ -249,10 +273,9 @@ void Rubik::turnBackCCW() {
   */
 
 bool Rubik::isSolved() {
-    bool p = this->checkLeftFace();
-    bool q = this->checkRightFace();
-    bool r = this->checkMiddleFace();
-    return p && q && r;
+    return this->checkLeftFace() && 
+           this->checkRightFace() && 
+           this->checkMiddleFace();
 };
 
 

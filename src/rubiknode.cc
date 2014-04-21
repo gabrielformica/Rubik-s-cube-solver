@@ -54,6 +54,66 @@ bool RubikNode::isGoal() {
 
 
 /**
+  * Generate successors of a Rubik node
+  * @return List of successors
+  *
+  * @section Description
+  *
+  * generateSucc only generates good successors.
+  * It takes in count the action of the current Rubik node, reducing 
+  * repeated nodes generation
+  */
+
+void RubikNode::generateSucc() {
+    //Left, Right, Top, Bottom, Front, Back
+    char faces[6] = {'L', 'R', 'T', 'B', 'F', 'Z'};
+
+    void (Rubik::*moves[6]) () = {
+        &Rubik::turnLeftCW,
+        &Rubik::turnRightCW,
+        &Rubik::turnTopCW,
+        &Rubik::turnBottomCW,
+        &Rubik::turnFrontCW,
+        &Rubik::turnBackCW,
+    };
+
+    int excl1 = -1;     //face to be excluded in faces array
+    int excl2 = -1;     //face to be excluded in faces array
+
+    switch (this->action) {
+        case '\x00': break;                           //root node case
+        case 'L':    excl1 = 0; excl2 = 0; break;     //action is left
+        case 'R':    excl1 = 0; excl2 = 1; break;     //action is right
+        case 'T':    excl1 = 2; excl2 = 2; break;     //action is top
+        case 'B':    excl1 = 2; excl2 = 3; break;     //action is bottom
+        case 'F':    excl1 = 4; excl2 = 4; break;     //action is front
+        case 'Z':    excl1 = 4; excl2 = 5; break;     //action is back
+    };
+
+    list<RubikNode *> successors;
+    int i;
+
+    for (i = 0; i < 6; i++) {
+        if (i == excl1 || i == excl2)
+            continue;
+
+        Rubik *newcube= new Rubik();
+        newcube = this->state->clone();  
+
+        (newcube->*moves[i])();          //turn 90 degrees
+        successors.push_back(new RubikNode(newcube->clone(), this, faces[i],0));
+
+        (newcube->*moves[i])();          //turn 180 degrees
+        successors.push_back(new RubikNode(newcube->clone(), this, faces[i],0));
+
+        (newcube->*moves[i])();          //turn 270 or -90 degrees
+        successors.push_back(new RubikNode(newcube->clone(), this, faces[i],0));
+    }
+
+    this->succ = successors;
+};
+
+/**
   * Extract solution to solve Rubik's cube
   * @return Sequence of actions to solve Rubik's cube
   */
