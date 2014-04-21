@@ -69,12 +69,12 @@ void RubikNode::generateSucc() {
     char faces[6] = {'L', 'R', 'T', 'B', 'F', 'Z'};
 
     void (Rubik::*moves[6]) () = {
-        &Rubik::turnLeftCW,
-        &Rubik::turnRightCW,
-        &Rubik::turnTopCW,
-        &Rubik::turnBottomCW,
-        &Rubik::turnFrontCW,
-        &Rubik::turnBackCW,
+        &Rubik::turnLeft,
+        &Rubik::turnRight,
+        &Rubik::turnTop,
+        &Rubik::turnBottom,
+        &Rubik::turnFront,
+        &Rubik::turnBack,
     };
 
     int excl1 = -1;     //face to be excluded in faces array
@@ -112,6 +112,7 @@ void RubikNode::generateSucc() {
 
     this->succ = successors;
 };
+
 
 /**
   * Extract solution to solve Rubik's cube
