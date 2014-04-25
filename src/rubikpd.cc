@@ -67,11 +67,29 @@ int Rubikpd::rankCIDs(Rubik *cube) {
 
 /**
   * Rank a Rubik's cube partly by taking only corners orientations 
+  *
+  * @section Description
+  * There are 3 orientations X,Y,Z: 100, 010, 001
+  * And they are gonna be represent as 0,1, or 2
+  * That's why % 4 is used!
+  *
   * @param 'cube' : Rubik's cube configuration
   * @return Orientations permutations (value between 0 and 6560)
   */
 
 int Rubikpd::rankCO(Rubik *cube) {
+    int rank = 0;
+    int i;
+    
+    for (i = 0; i < 16; i++) {
+        if (i % 2 == 0) {
+            unsigned char cubie = cube->getCubie(i);
+            int orientation = cube->getOrientation(cubie) % 4;
+            rank = (rank*3) + orientation;
+        }
+    }
+
+    return rank;
 };
 
 

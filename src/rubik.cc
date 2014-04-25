@@ -44,6 +44,28 @@ Rubik *Rubik::clone() {
 
 
 /**
+  * Get i-th cubie (or i % mod 20, if i >= 20)
+  * @param 'i' : number of i-th cubie
+  * @return The i-th Cubie, if i < 20. \xFF, in any other case
+  */
+
+unsigned char Rubik::getCubie(int i) {
+    int j = i % 20;
+    unsigned char cubie = '\xFF';
+
+    if ((j >= 0) && (j < 8)) 
+        cubie = this->left[j];
+    else if ((j >= 0) && (j < 16))
+        cubie = this->right[j % 8];
+    else if ((j >= 0) && (j < 20))
+        cubie = this->middle[j % 8];
+
+    return cubie;
+    
+};
+
+
+/**
   * Turn 90 degrees the left face clockwise
   */
 
