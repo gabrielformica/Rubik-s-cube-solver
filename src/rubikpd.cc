@@ -54,6 +54,13 @@ int Rubikpd::unrankCO(int x) {
     return x % (3^8);
 };
 
+/**
+  * @param 'n': 
+  * 'seq':
+  * 'inverse':
+  * @return ID corners 
+  */ 
+
 int Rubikpd::rankAux(int n, int* seq, int * inverse){
   if (n = 1)
     return 0;
