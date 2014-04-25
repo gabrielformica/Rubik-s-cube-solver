@@ -23,7 +23,7 @@ class Rubikpd {
          * There are 8!x3^8 = 264.539.520 possible configurations
          */
         int corners[264539520];   
-
+     
     public:
         Rubikpd();
         int getCCost(int);       //corners cost
@@ -33,6 +33,8 @@ class Rubikpd {
         int rankCIDs(Rubik *);    
         int rankCO(Rubik *);
         int rankC(Rubik *);
+        int rankAux(int,int*,int*);
+  
 };
 
 #endif

@@ -53,8 +53,7 @@ int Rubikpd::unrankCIDs(int x) {
 int Rubikpd::unrankCO(int x) {
     return x % (3^8);
 };
-
-
+ 
 /**
   * Rank a Rubik's cube partly by taking only corners IDs
   * @param 'cube' : Rubik's cube configuration
@@ -62,13 +61,40 @@ int Rubikpd::unrankCO(int x) {
   */
 
 int Rubikpd::rankCIDs(Rubik *cube) {
+  int cornersid[8];
+  int i;
+  int k = 0;
+  for(i = 0; i < 16; i++) {
+    if (i % 2 == 0) {
+      unsigned char cubie = cube->getCubie(i);
+      cornersid[k] = (cube->getId(cubie)) / 2;
+      k++;
+    }
+  }
+  return (this->rankAux(8,cornersid,{0,1,2,3,4,5,6,7,8}));
 };
 
+int Rubikpd::rankAux(int n, int* seq, int * inverse){
+  if (n = 1)
+    return 0;
+  int s = seq [n-1];
+  int temp = seq[n - 1];
+  seq[n-1] = seq[inverse[n-1]];
+  seq[inverse[n-1]] = temp;
+  temp = inverse[s];
+  inverse[s] = inverse[n-1];
+  inverse[n-1] = temp;
+  return s + n*(this->rankAux(n-1,seq,inverse));
+};
 
 /**
   * Rank a Rubik's cube partly by taking only corners orientations 
   *
-  * @section Description
+  * @section Descriptionint i;
+  for (i = 0; i < 8; i++ ){
+      this->identityCID[i] = i;
+  }
+} 
   * There are 3 orientations X,Y,Z: 100, 010, 001
   * And they are gonna be represent as 0,1, or 2
   * That's why % 4 is used!
@@ -104,7 +130,6 @@ int Rubikpd::rankC(Rubik *cube) {
     int y = this->rankCO(cube);       //Orientations permutation
     return x*(3^8) + y;
 };
-
 
 
 
