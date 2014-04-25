@@ -1,6 +1,6 @@
 GPPFLAGS= 
 GPP= g++
-OBJ= rubik.cc main.cc rubiknode.cc
+OBJ= rubik.cc main.cc rubiknode.cc rubikpd.cc
 
 rubik: $(OBJ)
 	$(GPP) $(OBJ) $(GPPFLAGS) -o rubik
