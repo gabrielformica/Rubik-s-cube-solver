@@ -53,6 +53,19 @@ int Rubikpd::unrankCIDs(int x) {
 int Rubikpd::unrankCO(int x) {
     return x % (3^8);
 };
+
+int Rubikpd::rankAux(int n, int* seq, int * inverse){
+  if (n = 1)
+    return 0;
+  int s = seq [n-1];
+  int temp = seq[n - 1];
+  seq[n-1] = seq[inverse[n-1]];
+  seq[inverse[n-1]] = temp;
+  temp = inverse[s];
+  inverse[s] = inverse[n-1];
+  inverse[n-1] = temp;
+  return s + n*(this->rankAux(n-1,seq,inverse));
+};
  
 /**
   * Rank a Rubik's cube partly by taking only corners IDs
@@ -71,21 +84,10 @@ int Rubikpd::rankCIDs(Rubik *cube) {
       k++;
     }
   }
-  return (this->rankAux(8,cornersid,{0,1,2,3,4,5,6,7,8}));
+  int aux [8] = {0,1,2,3,4,5,6,7};
+  return (this->rankAux(8,cornersid,aux));
 };
 
-int Rubikpd::rankAux(int n, int* seq, int * inverse){
-  if (n = 1)
-    return 0;
-  int s = seq [n-1];
-  int temp = seq[n - 1];
-  seq[n-1] = seq[inverse[n-1]];
-  seq[inverse[n-1]] = temp;
-  temp = inverse[s];
-  inverse[s] = inverse[n-1];
-  inverse[n-1] = temp;
-  return s + n*(this->rankAux(n-1,seq,inverse));
-};
 
 /**
   * Rank a Rubik's cube partly by taking only corners orientations 

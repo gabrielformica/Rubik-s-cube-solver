@@ -30,10 +30,11 @@ class Rubikpd {
     private:
         int unrankCIDs(int);     //Corners ID
         int unrankCO(int);       //Corners Orientations
+        int rankAux(int,int*,int*);     
         int rankCIDs(Rubik *);    
         int rankCO(Rubik *);
         int rankC(Rubik *);
-        int rankAux(int,int*,int*);
+       
   
 };
 
