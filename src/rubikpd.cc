@@ -65,7 +65,7 @@ int Rubikpd::unrankCO(int x) {
 
 int Rubikpd::rankAux(int n, int* seq, int * inverse){
 
-    if (n = 1)
+    if (n == 1)
         return 0;
     int s = seq [n-1];
     
@@ -148,6 +148,3 @@ int Rubikpd::rankC(Rubik *cube) {
     int y = this->rankCO(cube);       //Orientations permutation
     return x*(3^8) + y;
 };
-
-
-
