@@ -30,7 +30,7 @@ RubikNode::RubikNode(Rubik *state, RubikNode *parent,
 
 
 /**
-  * Initialize root node
+  * Initializes root node
   * @param 'state' : Rubik pointer that represents Rubik's cube 
   * @return root RubikNode
   */
@@ -44,7 +44,7 @@ RubikNode *RubikNode::init(Rubik *state) {
 
 
 /**
-  * Check if RubikNode is goal
+  * Checks if RubikNode is goal
   * @return True if state is a solved Rubik's cube. False in any other case
   */
 
@@ -54,7 +54,7 @@ bool RubikNode::isGoal() {
 
 
 /**
-  * Generate successors of a Rubik node
+  * Generates successors of a Rubik node
   * @return List of successors
   *
   * @section Description
@@ -115,7 +115,7 @@ void RubikNode::generateSucc() {
 
 
 /**
-  * Extract solution to solve Rubik's cube
+  * Extracts solution to solve Rubik's cube
   * @return Sequence of actions to solve Rubik's cube
   */
 

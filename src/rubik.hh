@@ -27,6 +27,7 @@ class Rubik {
     public:
         Rubik();
         Rubik *clone();
+        void setCubie(int,unsigned char);
         unsigned char getCubie(int);
         unsigned int getId(unsigned char);
         unsigned int getOrientation(unsigned char);

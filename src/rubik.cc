@@ -22,7 +22,7 @@ Rubik::Rubik() {};
 
 
 /**
-  * Clone this Rubik's cube
+  * Clones this Rubik's cube
   * @return A clone of this Rubik's cube
   */
 
@@ -44,7 +44,23 @@ Rubik *Rubik::clone() {
 
 
 /**
-  * Get i-th cubie (or i % mod 20, if i >= 20)
+  * Sets the i-th cubie (or i % mod 20, if i >= 20)
+  * @param 'i' : number of i-th cubie
+  */
+
+void Rubik::setCubie(int i, unsigned char cubie) {
+    int j = i % 20;
+
+    if ((j >= 0) && (j < 8)) 
+        this->left[j]  = cubie;
+    else if ((j >= 0) && (j < 16))
+        this->right[j % 8] = cubie;
+    else if ((j >= 0) && (j < 20))
+        this->middle[j % 8] = cubie;
+}
+
+/**
+  * Gets i-th cubie (or i % mod 20, if i >= 20)
   * @param 'i' : number of i-th cubie
   * @return The i-th Cubie, if i < 20. \xFF, in any other case
   */
@@ -66,7 +82,7 @@ unsigned char Rubik::getCubie(int i) {
 
 
 /**
-  * Turn 90 degrees the left face clockwise
+  * Turns 90 degrees the left face clockwise
   */
 
 void Rubik::turnLeft() { 
@@ -91,7 +107,7 @@ void Rubik::turnLeft() {
 
 
 /**
-  * Turn 90 degrees the right face clockwise
+  * Turns 90 degrees the right face clockwise
   */
 
 void Rubik::turnRight() {
@@ -145,7 +161,7 @@ void Rubik::turnTop() {
 
 
 /**
-  * Turn 90 degrees the bottom face clockwise
+  * Turns 90 degrees the bottom face clockwise
   */
 
 void Rubik::turnBottom() {
@@ -174,7 +190,7 @@ void Rubik::turnBottom() {
 
 
 /**
-  * Turn 90 degrees the front face clockwise
+  * Turns 90 degrees the front face clockwise
   */
 
 void Rubik::turnFront() {
@@ -199,7 +215,7 @@ void Rubik::turnFront() {
 
 
 /**
-  * Turn 90 degrees the back face clockwise
+  * Turns 90 degrees the back face clockwise
   */
 
 void Rubik::turnBack() {
@@ -224,7 +240,7 @@ void Rubik::turnBack() {
 
 
 /**
-  * Check if cube is solved
+  * Checks if cube is solved
   * @return True if cube is solved. False in any other case
   */
 
@@ -236,7 +252,7 @@ bool Rubik::isSolved() {
 
 
 /**
-  * Check that the left face is correctly solved
+  * Checks that the left face is correctly solved
   * @return True if correctly solved. False in any other case
   *
   * @section Description
@@ -271,7 +287,7 @@ bool Rubik::checkLeftFace() {
 
 
 /**
-  * Check that the right face is correctly solved
+  * Checks that the right face is correctly solved
   * @return True if correctly solved. False in any other case
   *
   * @section Description
@@ -307,7 +323,7 @@ bool Rubik::checkRightFace() {
 
 
 /**
-  * Check that the middle face is correctly solved
+  * Checks that the middle face is correctly solved
   * @return True if correctly solved. False in any other case
   *
   * @section Description
@@ -336,7 +352,7 @@ bool Rubik::checkMiddleFace() {
 }
 
 /**
-  * Get last 5 bits from byte
+  * Gets last 5 bits from byte
   * @param 'byte': unsigned char that represents identification and orientation
   * @return identification
   */
@@ -347,7 +363,7 @@ unsigned int Rubik::getId(unsigned char byte) {
 
 
 /**
-  * Get last 5 bits from byte
+  * Gets last 5 bits from byte
   * @param 'byte': unsigned char that represents identification and orientation
   * @return orientation 
   */
@@ -358,7 +374,7 @@ unsigned int Rubik::getOrientation(unsigned char byte) {
 
 
 /**
-  * Swap X and Y axis
+  * Swaps X and Y axis
   * @param 'byte': unsigned char that represents identification and orientation
   * @return new byte with same identification but different orientation
   */
@@ -376,7 +392,7 @@ unsigned char Rubik::swapXY(unsigned char byte) {
 
 
 /**
-  * Swap X and Z axis
+  * Swaps X and Z axis
   * @param 'byte': unsigned char that represents identification and orientation
   * @return new byte with same identification but different orientation
   */
@@ -394,7 +410,7 @@ unsigned char Rubik::swapXZ(unsigned char byte) {
 
 
 /**
-  * Swap Y and Z axis
+  * Swaps Y and Z axis
   * @param 'byte': unsigned char that represents identification and orientation
   * @return new byte with same identification but different orientation
   */
