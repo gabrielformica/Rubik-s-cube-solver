@@ -29,8 +29,8 @@ class Rubik {
         Rubik *clone();
         void setCubie(int,unsigned char);
         unsigned char getCubie(int);
-        unsigned int getId(unsigned char);
-        unsigned int getOrientation(unsigned char);
+        unsigned int getId(int);
+        unsigned int getOrientation(int);
         void turnLeft();
         void turnRight();
         void turnTop();
@@ -42,9 +42,6 @@ class Rubik {
         unsigned char swapXY(unsigned char);
         unsigned char swapXZ(unsigned char);
         unsigned char swapYZ(unsigned char);
-        bool checkLeftFace();
-        bool checkRightFace();
-        bool checkMiddleFace();
 };
 
 #endif
