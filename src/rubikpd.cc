@@ -8,6 +8,7 @@
   * Rubik's cube pattern database class header
   */
 
+#include <stdlib.h>
 #include "rubikpd.hh"
 #include "utils.hh"
 
@@ -152,7 +153,21 @@ int Rubikpd::rankCO(Rubik *cube) {
   */
 
 Rubik *Rubikpd::unrankC(int p) {
+    int t = 6561;    //3^8
+    Rubik *cube = new Rubik();
+    Rubik *IDs = this->unrankCIDs(p / t);
+    Rubik *orientations = this->unrankCO(p % t);
+    
+    int i;
+    for (i = 0; i < 20; i++) {
+        //Merge ID with orientation to get final cubie
+        unsigned char cubie = IDs->getCubie(i) || orientations->getCubie(i);
+        cube->setCubie(i, cubie);
+    }
 
+    free(IDs);
+    free(orientations);
+    return cube;
 };
  
 
