@@ -28,14 +28,25 @@ class Rubikpd {
         Rubikpd();
         int getCCost(int);       //corners cost
     private:
-        int unrankCIDs(int);     //Corners ID
-        int unrankCO(int);       //Corners Orientations
+        void initializeCorners();
+        void initializeOrientations();
+
+        //Ranking and unrankin methods
         int rankAux(int,int *,int *);     
-        int rankCIDs(Rubik *);    
-        int rankCO(Rubik *);
-        int rankC(Rubik *);
-       
-  
+        void unrankAux(int, int, int *);
+
+        //Methods to rank corners permutation
+        int rankC(Rubik *);      
+        int rankCIDs(Rubik *);   //Auxiliar function to rankC
+        int rankCO(Rubik *);     //Auxiliar function to rankC
+
+        //Methods to unrank corners permutation
+        Rubik *unrankC(int);
+        Rubik *unrankCIDs(int);     //Corners ID
+        Rubik *unrankCO(int);       //Corners Orientations
+
+        //Power method
+        int pow(int,int);
 };
 
 #endif
