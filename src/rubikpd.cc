@@ -9,6 +9,7 @@
   */
 
 #include "rubikpd.hh"
+#include "utils.hh"
 
 
 /**
@@ -50,17 +51,10 @@ int Rubikpd::rankAux(int n, int *seq, int *inverse) {
 
     if (n == 1)
         return 0;
-    int s = seq [n-1];
-    
-    //swap
-    int temp = seq[n - 1];
-    seq[n-1] = seq[inverse[n-1]];
-    seq[inverse[n-1]] = temp;
 
-    //swap
-    temp = inverse[s];
-    inverse[s] = inverse[n-1];
-    inverse[n-1] = temp;
+    int s = seq [n-1];
+    swap(&seq[n-1], &seq[inverse[n-1]]);
+    swap(&inverse[s], &inverse[n-1]);
 
     return s + n*(this->rankAux(n-1,seq,inverse));
 };
@@ -94,7 +88,7 @@ int Rubikpd::rankC(Rubik *cube) {
     int x = this->rankCIDs(cube);     //IDs permutation
     int y = this->rankCO(cube);       //Orientations permutation
 
-    return x*(3^8) + y;
+    return x*(pow(3,8)) + y;
 };
 
 
@@ -197,23 +191,4 @@ Rubik *Rubikpd::unrankCIDs(int x) {
   */
 
 Rubik *Rubikpd::unrankCO(int x) {
-};
-
-
-/**
-  * Returns base raised to the power exponent
-  * @param 'b'   :  base
-  * @param 'e'   :  exponent
-  * @return b^e
-  */
-
-int Rubikpd::pow(int b, int e) {
-    int i;
-
-    int pow = 1;
-    for (i = 1; i <= e; i++) {
-        pow = pow*b;
-    }
-    
-    return pow;
 };

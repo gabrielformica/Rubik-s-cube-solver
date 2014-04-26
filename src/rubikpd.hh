@@ -44,9 +44,6 @@ class Rubikpd {
         Rubik *unrankC(int);
         Rubik *unrankCIDs(int);     //Corners ID
         Rubik *unrankCO(int);       //Corners Orientations
-
-        //Power method
-        int pow(int,int);
 };
 
 #endif
