@@ -113,8 +113,7 @@ int Rubikpd::rankCIDs(Rubik *cube) {
     //Transforms a Rubik's cube into a corners permutation 
     for(i = 0; i < 16; i++) {
         if (i % 2 == 0) {
-            unsigned char cubie = cube->getCubie(i);
-            cornersid[k] = (cube->getId(cubie)) / 2;
+            cornersid[k] = (cube->getId(i)) / 2;
             k++;
         }
     }
@@ -142,10 +141,8 @@ int Rubikpd::rankCO(Rubik *cube) {
     
     for (i = 0; i < 16; i++) {
         if (i % 2 == 0) {
-            unsigned char cubie = cube->getCubie(i);
-
             //represent orientations as 0,1, or 2
-            int orientation = cube->getOrientation(cubie) % 4;
+            int orientation = cube->getOrientation(i) % 4;
             rank = (rank*3) + orientation;
         }
     }
@@ -204,5 +201,19 @@ Rubik *Rubikpd::unrankCO(int x) {
 
 
 /**
-  * 
+  * Returns base raised to the power exponent
+  * @param 'b'   :  base
+  * @param 'e'   :  exponent
+  * @return b^e
   */
+
+int Rubikpd::pow(int b, int e) {
+    int i;
+
+    int pow = 1;
+    for (i = 1; i <= e; i++) {
+        pow = pow*b;
+    }
+    
+    return pow;
+};

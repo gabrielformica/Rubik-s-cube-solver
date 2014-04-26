@@ -54,6 +54,7 @@ void Rubik::setCubie(int i, unsigned char cubie) {
         this->middle[j % 8] = cubie;
 }
 
+
 /**
   * Gets i-th cubie (or i % mod 20, if i >= 20)
   * @param 'i' : number of i-th cubie
@@ -237,6 +238,7 @@ void Rubik::turnBack() {
 /**
   * Checks if cube is solved
   * @return True if cube is solved. False in any other case
+  *
   * @section Description
   * The cube is correctly solved when:
   *         Cubie             ID         Orientation
@@ -266,22 +268,17 @@ void Rubik::turnBack() {
 
 bool Rubik::isSolved() {
     int i;
+
     for (i = 0; i < 20; i++) {
         //check positions
         if (this->getId(i) != i)
             return false;
 
         //check orientations
-        if (i < 16) {        //left and right faces
-            if ((i % 4 == 3) && (this->getOrientation(i) != 2 ))    
-                return false;
-            else if ((i % 4 != 3) && (this->getOrientation(i) != 1))
-                return false;
-        }
-        else {               //middle faces         
-            if (this->getOrientation(i) != 1)
-                return false;
-        } 
+        if ((i < 16) && (i % 4 == 3) && (this->getOrientation(i) != 2))
+            return false;
+        else if (this->getOrientation(i) != 1)
+            return false;
 
     }
     
