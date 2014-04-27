@@ -8,19 +8,11 @@
   * Rubik's cube pattern database class header
   */
 
-#include <stdlib.h>
 #include <list>
 #include "rubikpd.hh"
 #include "utils.hh"
 
 using namespace std;
-
-
-/**
-  * Class constructor
-  */
-
-Rubikpd::Rubikpd() {};
 
 
 /**
@@ -52,10 +44,12 @@ void Rubikpd::initializeCorners() {
     
     while (!open.empty()) {
         int parent = open.front();
-        Rubik *cube = this->unrankC(parent);
-        list<Rubik *> s = cube->getSucc();    //Successors
+        open.pop_front();                      
 
-        for (list<Rubik *>::iterator it = s.begin(); it != s.end(); it++) {
+        Rubik cube = this->unrankC(parent);
+        list<Rubik> s = cube.getSucc();    //Successors
+
+        for (list<Rubik>::iterator it = s.begin(); it != s.end(); it++) {
             int child = this->rankC(*it);
 
             if (this->corners[child] != -1)   //Already closed or in open queue
@@ -64,7 +58,9 @@ void Rubikpd::initializeCorners() {
             this->corners[child] = this->corners[parent] + 1;
             open.push_back(child);
         }
+
     }
+
 };
 
 
@@ -73,8 +69,8 @@ void Rubikpd::initializeCorners() {
   * @return Rubik's cube configurations with solved corners
   */
 
-Rubik *Rubikpd::goalForCorners() {
-    Rubik *cube = new Rubik();
+Rubik Rubikpd::goalForCorners() {
+    Rubik cube;
 
     int i;
     for (i = 0; i < 8; i++) {
@@ -85,7 +81,7 @@ Rubik *Rubikpd::goalForCorners() {
         if (i % 4 == 3) 
             orientation = '\x02';
 
-        cube->setCubie(i*2, id || orientation);
+        cube.setCubie(i*2, id || orientation);
     }
 
     return cube;
@@ -137,7 +133,7 @@ void Rubikpd::unrankAux(int n, int r, int *identity) {
   * @return Ranked permutation (value between 0 and 264.539.519)
   */
 
-int Rubikpd::rankC(Rubik *cube) {
+int Rubikpd::rankC(Rubik cube) {
     int x = this->rankCIDs(cube);     //IDs permutation
     int y = this->rankCO(cube);       //Orientations permutation
 
@@ -152,7 +148,7 @@ int Rubikpd::rankC(Rubik *cube) {
   * @return IDs permutation (value between 0 and 40319)
   */
 
-int Rubikpd::rankCIDs(Rubik *cube) {
+int Rubikpd::rankCIDs(Rubik cube) {
     int cornersid[8];
     int i;
     int k = 0;
@@ -160,7 +156,7 @@ int Rubikpd::rankCIDs(Rubik *cube) {
     //Transforms a Rubik's cube into a permutation of corners
     for(i = 0; i < 16; i++) {
         if (i % 2 == 0) {
-            cornersid[k] = (cube->getId(i)) / 2;
+            cornersid[k] = (cube.getId(i)) / 2;
             k++;
         }
     }
@@ -183,14 +179,14 @@ int Rubikpd::rankCIDs(Rubik *cube) {
   * @return Orientation permutations (value between 0 and 6560)
   */
 
-int Rubikpd::rankCO(Rubik *cube) {
+int Rubikpd::rankCO(Rubik cube) {
     int rank = 0;
     int i;
     
     for (i = 0; i < 16; i++) {
         if (i % 2 == 0) {
             //represent orientations as 0,1, or 2
-            int orientation = cube->getOrientation(i) % 4;
+            int orientation = cube.getOrientation(i) % 4;
             rank = (rank*3) + orientation;
         }
     }
@@ -205,21 +201,19 @@ int Rubikpd::rankCO(Rubik *cube) {
   * @return Rubik's cube configuration with null values in edge cubies
   */
 
-Rubik *Rubikpd::unrankC(int p) {
+Rubik Rubikpd::unrankC(int p) {
     int t = 6561;    //3^8
-    Rubik *cube = new Rubik();
-    Rubik *IDs = this->unrankCIDs(p / t);
-    Rubik *orientations = this->unrankCO(p % t);
+    Rubik cube;  
+    Rubik IDs = this->unrankCIDs(p / t);
+    Rubik orientations = this->unrankCO(p % t);
     
     int i;
     for (i = 0; i < 20; i++) {
         //Merge ID with orientation to get final cubie
-        unsigned char cubie = IDs->getCubie(i) || orientations->getCubie(i);
-        cube->setCubie(i, cubie);
+        unsigned char cubie = IDs.getCubie(i) || orientations.getCubie(i);
+        cube.setCubie(i, cubie);
     }
 
-    free(IDs);
-    free(orientations);
     return cube;
 };
  
@@ -231,8 +225,8 @@ Rubik *Rubikpd::unrankC(int p) {
   * @return Rubik's cube configuration
   */
 
-Rubik *Rubikpd::unrankCIDs(int x) {
-    Rubik *cube = new Rubik();
+Rubik Rubikpd::unrankCIDs(int x) {
+    Rubik cube;
     int inverse[8] = {0,1,2,3,4,5,6,7};
     int i;
 
@@ -241,7 +235,7 @@ Rubik *Rubikpd::unrankCIDs(int x) {
     //Transform sequence into a Rubik's cube configuration 
     for (i = 0; i < 8; i++) {
         unsigned char cubie = inverse[i];
-        cube->setCubie(i*2, cubie);       //i*2 because these are corner cubies
+        cube.setCubie(i*2, cubie);       //i*2 because these are corner cubies
     }
 
     return cube;
@@ -255,8 +249,8 @@ Rubik *Rubikpd::unrankCIDs(int x) {
   * @return Rubik's cube configuration
   */
 
-Rubik *Rubikpd::unrankCO(int x) {
-    Rubik *cube = new Rubik();
+Rubik Rubikpd::unrankCO(int x) {
+    Rubik cube;
     int y = x;
     int i;
 
@@ -269,7 +263,7 @@ Rubik *Rubikpd::unrankCO(int x) {
             di = 4;    //di was oriented to X-axis, wich is 100 in Rubik class
 
         unsigned char cubie = di; 
-        cube->setCubie(i*2, cubie);
+        cube.setCubie(i*2, cubie);
     }
 
     return cube;

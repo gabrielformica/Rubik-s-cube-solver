@@ -27,8 +27,7 @@ class Rubik {
         unsigned char middle[4]; //16 to 19 cubie
 
     public:
-        Rubik();
-        Rubik *clone();
+        Rubik clone();
         void setCubie(int,unsigned char);
         unsigned char getCubie(int);
         void turnLeft();
@@ -38,7 +37,7 @@ class Rubik {
         void turnFront();
         void turnBack();
         bool isSolved();
-        std::list<Rubik *> getSucc();
+        std::list<Rubik> getSucc();
         unsigned int getId(int);
         unsigned int getOrientation(int);
     private:

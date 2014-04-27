@@ -19,13 +19,15 @@ using namespace std;
   * Class constructor
   */
 
-RubikNode::RubikNode(Rubik *state, RubikNode *parent,
+RubikNode RubikNode::makeNode(Rubik state, RubikNode *parent,
                      char action, int cost) {
 
-    this->state = state;
-    this->parent = parent;
-    this->action = action;
-    this->cost = cost;
+    RubikNode node;
+    node.state = state;
+    node.parent = parent;
+    node.action = action;
+    node.cost = cost;
+    return node;
 };
 
 
@@ -35,11 +37,11 @@ RubikNode::RubikNode(Rubik *state, RubikNode *parent,
   * @return root RubikNode
   */
 
-RubikNode *RubikNode::init(Rubik *state) {
-    this->state = state;
-    this->parent = NULL;
-    this->action = '\x00';
-    this->cost = 0;
+RubikNode RubikNode::makeRootNode(Rubik state) {
+    RubikNode node;
+    node.state = state;
+    node.makeNode(state, NULL, '\x00',0);
+    return node;
 };
 
 
@@ -49,7 +51,7 @@ RubikNode *RubikNode::init(Rubik *state) {
   */
 
 bool RubikNode::isGoal() {
-    return this->state->isSolved();
+    return this->state.isSolved();
 };
 
 
@@ -80,16 +82,16 @@ void RubikNode::generateChildren() {
         case 'Z':    excl1 = 4; excl2 = 5; break;     //action is back
     };
 
-    list<Rubik *> succ = this->state->getSucc();      //successors of cube
-    list<RubikNode *> children;                       //children of this node
+    list<Rubik> succ = this->state.getSucc();      //successors of cube
+    list<RubikNode> children;                       //children of this node
 
     int i = 0;
-    for (list<Rubik *>::iterator it = succ.begin(); it != succ.end(); it++) {
+    for (list<Rubik>::iterator it = succ.begin(); it != succ.end(); it++) {
         if ((i / 3) == excl1 || (i / 3) == excl2) {
             i++;
             continue;
         }
-        children.push_back(new RubikNode((*it), this, faces[i / 3], 0));
+        children.push_back(this->makeNode((*it), this, faces[i / 3], 0));
         i++;
     }
 

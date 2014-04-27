@@ -17,23 +17,16 @@ using namespace std;
 
 
 /**
-  * Class constructor
-  */
-
-Rubik::Rubik() {};
-
-
-/**
   * Clones this Rubik's cube
   * @return A clone of this Rubik's cube
   */
 
-Rubik *Rubik::clone() {
-    Rubik *clone = new Rubik();
+Rubik Rubik::clone() {
+    Rubik clone;
     int i;
 
     for (i = 0; i < 20; i++) {
-        clone->setCubie(i,this->getCubie(i));
+        clone.setCubie(i, this->getCubie(i));
     }
 
     return clone;
@@ -293,7 +286,7 @@ bool Rubik::isSolved() {
   * @return The list of its 18 successor
   */
 
-list<Rubik *> Rubik::getSucc() {
+list<Rubik> Rubik::getSucc() {
     //Faces you can move
     void (Rubik::*moves[6]) () = {
         &Rubik::turnLeft,
@@ -304,20 +297,20 @@ list<Rubik *> Rubik::getSucc() {
         &Rubik::turnBack,
     };
 
-    list<Rubik *> successors;
+    list<Rubik> successors;
 
     int i;
     for (i = 0; i < 6; i++) {
-        Rubik *newcube;
+        Rubik newcube;
         newcube = this->clone();  
 
-        (newcube->*moves[i])();          //turn 90 degrees
-        successors.push_back(newcube->clone());
+        (newcube.*moves[i])();          //turn 90 degrees
+        successors.push_back(newcube.clone());
 
-        (newcube->*moves[i])();          //turn 180 degrees
-        successors.push_back(newcube->clone());
+        (newcube.*moves[i])();          //turn 180 degrees
+        successors.push_back(newcube.clone());
 
-        (newcube->*moves[i])();          //turn 270 or -90 degrees
+        (newcube.*moves[i])();          //turn 270 or -90 degrees
         successors.push_back(newcube);   
     }
     

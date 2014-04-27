@@ -19,15 +19,15 @@
  */
 class RubikNode {
     private:
-        Rubik *state;                  //cube
+        Rubik state;                  //cube
         RubikNode *parent;
         char action;
         int cost;
-        std::list<RubikNode *> children;
+        std::list<RubikNode> children;
 
     public:
-        RubikNode(Rubik *,RubikNode *,char,int);
-        RubikNode *init(Rubik *state);
+        RubikNode makeNode(Rubik,RubikNode *,char,int);
+        RubikNode makeRootNode(Rubik state);
         bool isGoal();
         void generateChildren();
         std::list<char> extractSolution(); 
