@@ -39,19 +39,32 @@ int Rubikpd::getCCost(int i) {
   */
 
 void Rubikpd::initializeCorners() {
-    int cost = 0;
-    list<int> open;
-    list<int> closed;
+    //initialize every corner rank in -1
+    int i;
+    for (i = 0; i < 264539520; i++) 
+        this->corners[i] = -1;
 
-    open.push_back(this->rankC(this->goalForCorners()));
+    int goal = this->rankC(this->goalForCorners());
+    this->corners[goal] = 0;
 
+    list<int> open;   //open queue
+    open.push_back(goal);
+    
     while (!open.empty()) {
-        int p = open.front();
-        this->corners[p] = cost;
-        Rubik *cube = this->unrankC(p);
-        list<Rubik *> succ = cube->getSucc();
-    }
+        int parent = open.front();
+        Rubik *cube = this->unrankC(parent);
+        list<Rubik *> s = cube->getSucc();    //Successors
 
+        for (list<Rubik *>::iterator it = s.begin(); it != s.end(); it++) {
+            int child = this->rankC(*it);
+
+            if (this->corners[child] != -1)   //Already closed or in open queue
+                continue;
+            
+            this->corners[child] = this->corners[parent] + 1;
+            open.push_back(child);
+        }
+    }
 };
 
 
