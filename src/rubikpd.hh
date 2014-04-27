@@ -32,10 +32,6 @@ class Rubikpd {
 
         Rubik goalForCorners();
 
-        //Ranking and unrankin methods
-        int rankAux(int,int *,int *);     
-        void unrankAux(int, int, int *);
-
         //Methods to rank corners permutation
         int rankC(Rubik);      
         int rankCIDs(Rubik);   //Auxiliar function to rankC

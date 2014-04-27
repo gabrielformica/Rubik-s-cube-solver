@@ -46,7 +46,7 @@ void Rubikpd::initializeCorners() {
         int parent = open.front();
         open.pop_front();                      
 
-        Rubik cube = this->unrankC(parent);
+        Rubik cube = unrankC(parent);
         list<Rubik> s = cube.getSucc();    //Successors
 
         for (list<Rubik>::iterator it = s.begin(); it != s.end(); it++) {
@@ -89,45 +89,6 @@ Rubik Rubikpd::goalForCorners() {
 
 
 /**
-  * Ranks an array (sequence) of int
-  * @param 'n'  :   size of any of the permutations 
-  * @param 'seq'    : sequence to be rakend
-  * @param 'inverse': inverse of the identity
-  * @return Ranked permutation int
-  */ 
-
-int Rubikpd::rankAux(int n, int *seq, int *inverse) {
-
-    if (n == 1)
-        return 0;
-
-    int s = seq [n-1];
-    swap(&seq[n-1], &seq[inverse[n-1]]);
-    swap(&inverse[s], &inverse[n-1]);
-
-    return s + n*(this->rankAux(n-1, seq, inverse));
-};
-
-
-/**
-  * Unranks an array (sequence) of int
-  * @param 'n'         :   size of any of the permutations 
-  * @param 'r'         :   ranked value to be unranked
-  * @param 'identity'  :   identity permutation
-  */
-
-void Rubikpd::unrankAux(int n, int r, int *identity) {
-
-    if (n > 0) {
-        int temp = identity[n-1];
-        identity[n-1] = identity[r % n];
-        identity[r % n] = temp;
-        this->unrankAux(n-1, r / n, identity);
-    }
-};
-
-
-/**
   * Ranks a Rubik's cube 
   * @param 'cube' : Rubik's cube configuration
   * @return Ranked permutation (value between 0 and 264.539.519)
@@ -143,7 +104,8 @@ int Rubikpd::rankC(Rubik cube) {
 
 /**
   * Ranks a Rubik's cube partly by taking only corner IDs
-  * It uses rankAux to rank a permutation of integers into an integer
+  * It uses rankAux from utils.hh to rank a permutation of 
+  * integers into an integer
   * @param 'cube' : Rubik's cube configuration
   * @return IDs permutation (value between 0 and 40319)
   */
@@ -162,7 +124,7 @@ int Rubikpd::rankCIDs(Rubik cube) {
     }
 
     int inverse[8] = {0,1,2,3,4,5,6,7};
-    return (this->rankAux(8, cornersid, inverse));
+    return (rankAux(8, cornersid, inverse));  //rank a sequence of integers
 };
 
 
@@ -220,6 +182,8 @@ Rubik Rubikpd::unrankC(int p) {
 
 /**
   * Gets a Rubik's cube configuration without orientations (only IDs) 
+  * It uses unrankAux from utils.hh to unrank an intenger into
+  * a sequence of integers
   * from an integer value between 0 and 40319 (ranked ID permutation)
   * @param 'x' : permutation of corner IDs represented as an int
   * @return Rubik's cube configuration
@@ -230,7 +194,7 @@ Rubik Rubikpd::unrankCIDs(int x) {
     int inverse[8] = {0,1,2,3,4,5,6,7};
     int i;
 
-    unrankAux(8, x, inverse);
+    unrankAux(8, x, inverse);   //Put in inverse the unranked permutation
 
     //Transform sequence into a Rubik's cube configuration 
     for (i = 0; i < 8; i++) {
