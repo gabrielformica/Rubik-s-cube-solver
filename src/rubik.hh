@@ -11,6 +11,8 @@
 #ifndef RUBIK_HH
 #define RUBIK_HH
 
+#include <list>
+
 /*
  * Rubik's cube class
  */
@@ -29,8 +31,6 @@ class Rubik {
         Rubik *clone();
         void setCubie(int,unsigned char);
         unsigned char getCubie(int);
-        unsigned int getId(int);
-        unsigned int getOrientation(int);
         void turnLeft();
         void turnRight();
         void turnTop();
@@ -38,6 +38,9 @@ class Rubik {
         void turnFront();
         void turnBack();
         bool isSolved();
+        std::list<Rubik *> getSucc();
+        unsigned int getId(int);
+        unsigned int getOrientation(int);
     private:
         unsigned char swapXY(unsigned char);
         unsigned char swapXZ(unsigned char);

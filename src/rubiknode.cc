@@ -54,28 +54,18 @@ bool RubikNode::isGoal() {
 
 
 /**
-  * Generates successors of a Rubik node
-  * @return List of successors
+  * Generates children of this node 
   *
   * @section Description
   *
-  * generateSucc only generates good successors.
+  * generateChildren only generates good children.
   * It takes in count the action of the current Rubik node, reducing 
   * repeated nodes generation
   */
 
-void RubikNode::generateSucc() {
+void RubikNode::generateChildren() {
     //Left, Right, Top, Bottom, Front, Back
     char faces[6] = {'L', 'R', 'T', 'B', 'F', 'Z'};
-
-    void (Rubik::*moves[6]) () = {
-        &Rubik::turnLeft,
-        &Rubik::turnRight,
-        &Rubik::turnTop,
-        &Rubik::turnBottom,
-        &Rubik::turnFront,
-        &Rubik::turnBack,
-    };
 
     int excl1 = -1;     //face to be excluded in faces array
     int excl2 = -1;     //face to be excluded in faces array
@@ -90,27 +80,20 @@ void RubikNode::generateSucc() {
         case 'Z':    excl1 = 4; excl2 = 5; break;     //action is back
     };
 
-    list<RubikNode *> successors;
-    int i;
+    list<Rubik *> succ = this->state->getSucc();      //successors of cube
+    list<RubikNode *> children;                       //children of this node
 
-    for (i = 0; i < 6; i++) {
-        if (i == excl1 || i == excl2)
+    int i = 0;
+    for (list<Rubik *>::iterator it = succ.begin(); it != succ.end(); it++) {
+        if ((i / 3) == excl1 || (i / 3) == excl2) {
+            i++;
             continue;
-
-        Rubik *newcube= new Rubik();
-        newcube = this->state->clone();  
-
-        (newcube->*moves[i])();          //turn 90 degrees
-        successors.push_back(new RubikNode(newcube->clone(), this, faces[i],0));
-
-        (newcube->*moves[i])();          //turn 180 degrees
-        successors.push_back(new RubikNode(newcube->clone(), this, faces[i],0));
-
-        (newcube->*moves[i])();          //turn 270 or -90 degrees
-        successors.push_back(new RubikNode(newcube->clone(), this, faces[i],0));
+        }
+        children.push_back(new RubikNode((*it), this, faces[i / 3], 0));
+        i++;
     }
 
-    this->succ = successors;
+    this->children = children;
 };
 
 

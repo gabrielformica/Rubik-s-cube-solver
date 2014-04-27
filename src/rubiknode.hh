@@ -23,13 +23,13 @@ class RubikNode {
         RubikNode *parent;
         char action;
         int cost;
-        std::list<RubikNode *> succ;  //successors
+        std::list<RubikNode *> children;
 
     public:
         RubikNode(Rubik *,RubikNode *,char,int);
         RubikNode *init(Rubik *state);
         bool isGoal();
-        void generateSucc();
+        void generateChildren();
         std::list<char> extractSolution(); 
 };
 

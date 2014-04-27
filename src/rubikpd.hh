@@ -31,6 +31,8 @@ class Rubikpd {
         void initializeCorners();
         void initializeOrientations();
 
+        Rubik *goalForCorners();
+
         //Ranking and unrankin methods
         int rankAux(int,int *,int *);     
         void unrankAux(int, int, int *);

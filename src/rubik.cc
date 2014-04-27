@@ -10,7 +10,9 @@
 
 
 #include <string>
+#include <list>
 #include "rubik.hh"
+
 using namespace std;
 
 
@@ -283,6 +285,43 @@ bool Rubik::isSolved() {
     }
     
     return true;
+};
+
+
+/**
+  * Returns its 18 successors
+  * @return The list of its 18 successor
+  */
+
+list<Rubik *> Rubik::getSucc() {
+    //Faces you can move
+    void (Rubik::*moves[6]) () = {
+        &Rubik::turnLeft,
+        &Rubik::turnRight,
+        &Rubik::turnTop,
+        &Rubik::turnBottom,
+        &Rubik::turnFront,
+        &Rubik::turnBack,
+    };
+
+    list<Rubik *> successors;
+
+    int i;
+    for (i = 0; i < 6; i++) {
+        Rubik *newcube;
+        newcube = this->clone();  
+
+        (newcube->*moves[i])();          //turn 90 degrees
+        successors.push_back(newcube->clone());
+
+        (newcube->*moves[i])();          //turn 180 degrees
+        successors.push_back(newcube->clone());
+
+        (newcube->*moves[i])();          //turn 270 or -90 degrees
+        successors.push_back(newcube);   
+    }
+    
+    return successors;
 };
 
 

@@ -9,8 +9,11 @@
   */
 
 #include <stdlib.h>
+#include <list>
 #include "rubikpd.hh"
 #include "utils.hh"
+
+using namespace std;
 
 
 /**
@@ -36,7 +39,43 @@ int Rubikpd::getCCost(int i) {
   */
 
 void Rubikpd::initializeCorners() {
+    int cost = 0;
+    list<int> open;
+    list<int> closed;
 
+    open.push_back(this->rankC(this->goalForCorners()));
+
+    while (!open.empty()) {
+        int p = open.front();
+        this->corners[p] = cost;
+        Rubik *cube = this->unrankC(p);
+        list<Rubik *> succ = cube->getSucc();
+    }
+
+};
+
+
+/**
+  * Returns the goal Rubik's cube for the corners
+  * @return Rubik's cube configurations with solved corners
+  */
+
+Rubik *Rubikpd::goalForCorners() {
+    Rubik *cube = new Rubik();
+
+    int i;
+    for (i = 0; i < 8; i++) {
+        unsigned char id = i*2;
+        id << 3;                //now id is in the right position
+
+        unsigned char orientation = '\x01';
+        if (i % 4 == 3) 
+            orientation = '\x02';
+
+        cube->setCubie(i*2, id || orientation);
+    }
+
+    return cube;
 };
 
 
@@ -122,6 +161,7 @@ int Rubikpd::rankCIDs(Rubik *cube) {
   * Ranks a Rubik's cube partly by taking only corner orientations 
   *
   * @section Description
+  *
   * There are 3 orientations X,Y,Z: 100, 010, 001
   * And they are gonna be represent as 0,1, or 2
   * That's why % 4 is used!
@@ -189,7 +229,6 @@ Rubik *Rubikpd::unrankCIDs(int x) {
     for (i = 0; i < 8; i++) {
         unsigned char cubie = inverse[i];
         cube->setCubie(i*2, cubie);       //i*2 because these are corner cubies
-        cube->setCubie((i*2)+1, '\x00');
     }
 
     return cube;
@@ -208,7 +247,7 @@ Rubik *Rubikpd::unrankCO(int x) {
     int y = x;
     int i;
 
-    for (i = 0; i < 7; i++) {
+    for (i = 0; i < 8; i++) {
         //calculate orientation of di with pure magic
         int di = y / pow(3, i);     
         y = y-(di*pow(3, i));     
@@ -217,7 +256,6 @@ Rubik *Rubikpd::unrankCO(int x) {
             di = 4;    //di was oriented to X-axis, wich is 100 in Rubik class
 
         unsigned char cubie = di; 
-        cube->setCubie(i, '\x00');  //Ignore edge cubies
         cube->setCubie(i*2, cubie);
     }
 
