@@ -266,15 +266,22 @@ bool Rubik::isSolved() {
 
     for (i = 0; i < 20; i++) {
         //check positions
-        if (this->getId(i) != i)
+        if (this->getId(i) != i) {
             return false;
+        }
 
         //check orientations
-        if ((i < 16) && (i % 4 == 3) && (this->getOrientation(i) != 2))
-            return false;
-        else if (this->getOrientation(i) != 1)
-            return false;
-
+        if (i < 16) {
+            if ((this->getOrientation(i) != 2) && (i % 4 == 3))
+                return false;
+            
+            if ((this->getOrientation(i) != 1) && (i % 4 != 3))
+                return false;
+        }
+        else {
+            if (this->getOrientation(i) != 1)
+                return false;
+        }
     }
     
     return true;
@@ -326,7 +333,7 @@ list<Rubik> Rubik::getSucc() {
 
 unsigned int Rubik::getId(int i) {
     unsigned char cubie = this->getCubie(i);
-    return (int) cubie >> 3;
+    return (int) (cubie >> 3);
 }
 
 
@@ -338,7 +345,7 @@ unsigned int Rubik::getId(int i) {
 
 unsigned int Rubik::getOrientation(int i) {
     unsigned char cubie = this->getCubie(i);
-    return (int) cubie & '\x07';
+    return (int) (cubie & '\x07');
 }
 
 
