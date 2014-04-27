@@ -19,15 +19,13 @@ using namespace std;
   * Class constructor
   */
 
-RubikNode RubikNode::makeNode(Rubik state, RubikNode *parent,
+void RubikNode::makeNode(Rubik state, RubikNode *parent,
                      char action, int cost) {
 
-    RubikNode node;
-    node.state = state;
-    node.parent = parent;
-    node.action = action;
-    node.cost = cost;
-    return node;
+    this->state = state;
+    this->parent = parent;
+    this->action = action;
+    this->cost = cost;
 };
 
 
@@ -37,11 +35,8 @@ RubikNode RubikNode::makeNode(Rubik state, RubikNode *parent,
   * @return root RubikNode
   */
 
-RubikNode RubikNode::makeRootNode(Rubik state) {
-    RubikNode node;
-    node.state = state;
-    node.makeNode(state, NULL, '\x00',0);
-    return node;
+void RubikNode::makeRootNode(Rubik state) {
+    this->makeNode(state, NULL, '\x00',0);
 };
 
 
@@ -91,7 +86,9 @@ void RubikNode::generateChildren() {
             i++;
             continue;
         }
-        children.push_back(this->makeNode((*it), this, faces[i / 3], 0));
+        RubikNode node;
+        node.makeNode((*it), this, faces[i / 3], 0);
+        children.push_back(node);
         i++;
     }
 

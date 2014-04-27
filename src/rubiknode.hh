@@ -26,8 +26,8 @@ class RubikNode {
         std::list<RubikNode> children;
 
     public:
-        RubikNode makeNode(Rubik,RubikNode *,char,int);
-        RubikNode makeRootNode(Rubik state);
+        void makeNode(Rubik,RubikNode *,char,int);
+        void makeRootNode(Rubik state);
         bool isGoal();
         void generateChildren();
         std::list<char> extractSolution(); 
