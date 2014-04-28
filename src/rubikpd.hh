@@ -41,6 +41,16 @@ class Rubikpd {
         Rubik unrankC(int);
         Rubik unrankCIDs(int);     //Corners ID
         Rubik unrankCO(int);       //Corners Orientations
+
+        //Methods to rank edges permutation
+        int rankEIDs(Rubik);   //Auxiliar function to rankC
+        
+
+        //Methods to unrank edges permutation
+        Rubik unrankEIDs(int);     //Edges ID
+        
+
+
 };
 
 #endif

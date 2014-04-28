@@ -232,3 +232,54 @@ Rubik Rubikpd::unrankCO(int x) {
 
     return cube;
 };
+
+
+/**
+  * Ranks a Rubik's cube partly by taking only six edges IDs
+  * It uses rankAux from utils.hh to rank a permutation of 
+  * integers into an integer
+  * @param 'cube' : Rubik's cube configuration
+  * @return IDs permutation (value between 0 and 665280)
+  */
+
+int Rubikpd::rankEIDs(Rubik cube) {
+    int edgesid[6];
+    int i;
+    int k = 0;
+    
+    //Transforms a Rubik's cube into a permutation of edges
+    for(i = 0; i < 12; i++) {
+        if (i % 2 == 1) {
+	  edgesid[k] = ((cube.getId(i))-1)/2 ;
+          k++;
+        }
+    }
+
+    int inverse[6] = {0,1,2,3,4,5};
+    return (rankAux(6, edgesid, inverse));  //rank a sequence of integers
+};
+
+/**
+  * Gets a Rubik's cube configuration without orientations (only IDs) 
+  * It uses unrankAux from utils.hh to unrank an intenger into
+  * a sequence of integers
+  * from an integer value between 0 and 665280 (ranked ID permutation)
+  * @param 'x' : permutation of corner IDs represented as an int
+  * @return Rubik's cube configuration
+  */
+
+Rubik Rubikpd::unrankEIDs(int x) {
+    Rubik cube;
+    int inverse[6] = {0,1,2,3,4,5};
+    int i;
+
+    unrankAux(6, x, inverse);   //Put in inverse the unranked permutation
+
+    //Transform sequence into a Rubik's cube configuration 
+    for (i = 0; i < 6; i++) {
+        unsigned char cubie = inverse[i];
+        cube.setCubie(i*2+1, cubie);       //i*2+1 because these are edges cubies
+    }
+
+    return cube;
+};
