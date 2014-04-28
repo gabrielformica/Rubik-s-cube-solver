@@ -257,29 +257,59 @@ int Rubikpd::rankE(int table, Rubik cube) {
 
 
 /**
-  * Ranks a Rubik's cube partly by taking only edge IDs
+  * Ranks a Rubik's cube partly by taking only six edges IDs
   * It uses rankAux from utils.hh to rank a permutation of 
   * integers into an integer
   * @param 'cube' : Rubik's cube configuration
-  * @return IDs permutation (value between 0 and 12!/6!)
+  * @return IDs permutation (value between 0 and 665.279)
   */
 
 int Rubikpd::rankEIDs(int table, Rubik cube) {
+    int edgesid[6];
+    int i;
+    int k = 0;
+    //With table 2, first cubie is 8-th cubie 
+    int aux = (table-1)*8;     
+    
+
+    int inverse[6] = {0,1,2,3,4,5};
+    return (rankAux(6, edgesid, inverse));  //rank a sequence of integers
 };
 
 
 /**
-  * Ranks a Rubik's cube partly by taking only corner orientations 
-  *
-  * @section Description
-  *
-  * There are 3 orientations X,Y,Z: 100, 010, 001
-  * And they are gonna be represent as 0,1, or 2
-  * That's why % 4 is used!
-  *
+  * Ranks a Rubik's cube partly by taking only six edges orientations 
+  * It uses rankAux from utils.hh to rank a permutation of 
+  * integers into an integer
   * @param 'cube' : Rubik's cube configuration
-  * @return Orientation permutations (value between 0 and 6560)
+  * @return IDs permutation (value between 0 and 63)
   */
 
 int Rubikpd::rankEO(int table, Rubik cube) {
+};
+
+
+/**
+  * Gets a Rubik's cube configuration without orientations (only IDs) 
+  * It uses unrankAux from utils.hh to unrank an intenger into
+  * a sequence of integers
+  * from an integer value between 0 and 665.279 (ranked ID permutation)
+  * @param 'x' : permutation of corner IDs represented as an int
+  * @return Rubik's cube configuration
+  */
+
+Rubik Rubikpd::unrankEIDs(int table, int x) {
+    Rubik cube;
+    int inverse[6] = {0,1,2,3,4,5};
+    int i;
+
+    unrankAux(6, x, inverse);   //Put in inverse the unranked permutation
+
+    //Transform sequence into a Rubik's cube configuration 
+    for (i = 0; i < 6; i++) {
+        unsigned char cubie = inverse[i];
+        cube.setCubie(i*2+1, cubie);     //i*2+1 because these are edges cubies
+    }
+
+    return cube;
 };
