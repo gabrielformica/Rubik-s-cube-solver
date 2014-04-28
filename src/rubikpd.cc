@@ -27,11 +27,11 @@ int Rubikpd::getCCost(int i) {
 
 
 /**
-  * Initializes corner pattern database
+  * Initializes pattern database of corners configuration
   */
 
 void Rubikpd::initializeCorners() {
-    //initialize every corner rank in -1
+    //initialize every cost in -1
     int i;
     for (i = 0; i < 264539520; i++) 
         this->corners[i] = -1;
@@ -60,7 +60,14 @@ void Rubikpd::initializeCorners() {
         }
 
     }
+};
 
+
+/**
+  * Initializes pattern database of edges configuration
+  */
+
+void Rubikpd::initializeEdges() {
 };
 
 
@@ -89,7 +96,7 @@ Rubik Rubikpd::goalForCorners() {
 
 
 /**
-  * Ranks a Rubik's cube 
+  * Ranks a Rubik's cube partly by taking only corners
   * @param 'cube' : Rubik's cube configuration
   * @return Ranked permutation (value between 0 and 264.539.519)
   */
@@ -231,4 +238,48 @@ Rubik Rubikpd::unrankCO(int x) {
     }
 
     return cube;
+};
+
+
+/**
+  * Ranks a Rubik's cube partly by taking only edges  (edges1)
+  * @param 'table' : Has what table is going to be used
+  * @param 'cube'  : Rubik's cube configuration
+  * @return Ranked permutation (value between 0 and 42.577.920)
+  */
+
+int Rubikpd::rankE(int table, Rubik cube) {
+    int x = this->rankEIDs(table, cube);     //IDs permutation
+    int y = this->rankEO(table, cube);       //Orientations permutation
+
+    return x*(pow(2,6)) + y;
+};
+
+
+/**
+  * Ranks a Rubik's cube partly by taking only edge IDs
+  * It uses rankAux from utils.hh to rank a permutation of 
+  * integers into an integer
+  * @param 'cube' : Rubik's cube configuration
+  * @return IDs permutation (value between 0 and 12!/6!)
+  */
+
+int Rubikpd::rankEIDs(int table, Rubik cube) {
+};
+
+
+/**
+  * Ranks a Rubik's cube partly by taking only corner orientations 
+  *
+  * @section Description
+  *
+  * There are 3 orientations X,Y,Z: 100, 010, 001
+  * And they are gonna be represent as 0,1, or 2
+  * That's why % 4 is used!
+  *
+  * @param 'cube' : Rubik's cube configuration
+  * @return Orientation permutations (value between 0 and 6560)
+  */
+
+int Rubikpd::rankEO(int table, Rubik cube) {
 };
