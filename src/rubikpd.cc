@@ -130,7 +130,11 @@ int Rubikpd::rankCIDs(Rubik cube) {
         }
     }
 
-    int inverse[8] = {0,1,2,3,4,5,6,7};
+    //Pre calculate inverse
+    int inverse[8];
+    for (i = 0; i < 8; i++)
+      inverse[cornersid[i]] = i;
+
     return (rankAux(8, cornersid, inverse));  //rank a sequence of integers
 };
 
@@ -260,45 +264,32 @@ int Rubikpd::rankE(int table, Rubik cube) {
   * Ranks a Rubik's cube partly by taking only six edges IDs
   * It uses rankAux from utils.hh to rank a permutation of 
   * integers into an integer
-  * @param 'cube' : Rubik's cube configuration
+  *
+  * @param 'table' : Table we are ranking (1 for edges1, or 2 for edges2)
+  * @param 'cube'  : Rubik's cube configuration
   * @return IDs permutation (value between 0 and 665.279)
   */
 
 int Rubikpd::rankEIDs(int table, Rubik cube) {
-  int edgesid[6];
-  int i;
-  int k = 0;
-  int n;
-  //With table 2, first cubie is 8-th cubie 
-  //int aux = (table-1)*8;     
-  
-  //Transforms a Rubik's cube into a permutation of edges1
-  if (table == 1){
-    i = 0; 
-    n = 8;
-    // the fist middle
-    edgesid[4] = cube.getId(16)/2;
-    edgesid[5] = (cube.getId(17)-1)/2;
- 
-    //Transforms a Rubik's cube into a permutation of edges2
-  } else {
-    i = 9; 
-    n = 16;
-    // the last middle 
-    edgesid[4] = cube.getId(18)/2;;
-    edgesid[5] = (cube.getId(19)-1)/2;;
+    int edgesid[6];
 
-  }
-    while(i < n) {
-      if (i % 2 == 1) {
-	edgesid[k] = ((cube.getId(i))-1)/2 ;
-	k++;
-      }
-      i++;
+    //With table 2, first cubie is 8-th cubie 
+    int offset = (table-1)*8;     
+    int i;
+    int k = 0;
+    for (i = offset; i < 8 + offset; i++) {
+        if (i % 2 != 0) {
+            edgesid[k] = (cube.getId(i) - offset) / 2;
+            k++;
+        }
     }
-  
-  int inverse[6] = {0,1,2,3,4,5};
-  return (rankAux(6, edgesid, inverse));  //rank a sequence of integers
+
+    int firstmiddle = 16 + (offset / 4); 
+    edgesid[4] = cube.getId(firstmiddle) / 2;
+    edgesid[5] = cube.getId(firstmiddle + 1) / 2;
+
+    int inverse[6] = {0,1,2,3,4,5};
+    return (rankAux(6, edgesid, inverse));  //rank a sequence of integers
 };
 
 
@@ -324,31 +315,4 @@ int Rubikpd::rankEO(int table, Rubik cube) {
   */
 
 Rubik Rubikpd::unrankEIDs(int table, int x) {
-  Rubik cube;
-  int inverse[6] = {0,1,2,3,4,5};
-  int i;
-  int n;
-  unrankAux(6, x, inverse);   //Put in inverse the unranked permutation
-  
-  //Transform sequence into a Rubik's cube configuration 
-    if (table == 1){
-      i = 0; 
-      n = 4;
-      cube.setCubie(16,cubie);
-      cube.setCubie(17,cubie);
-      
-    } else {
-      i = 4;
-      n = 8;
-      cube.setCubie(18,cubie);
-      cube.setCubie(19,cubie);	    
-    }
-    
-    while (i < n) {
-      unsigned char cubie = inverse[i];
-      cube.setCubie(i*2+1, cubie);//i*2+1 because these are edges cubies
-      i++;
-    }
-    
-    return cube;
 };
