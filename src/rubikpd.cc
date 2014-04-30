@@ -202,14 +202,14 @@ Rubik Rubikpd::unrankC(int p) {
 
 Rubik Rubikpd::unrankCIDs(int x) {
     Rubik cube;
-    int inverse[8] = {0,1,2,3,4,5,6,7};
+    int identity[8] = {0,1,2,3,4,5,6,7};
     int i;
 
-    unrankAux(8, x, inverse);   //Put in inverse the unranked permutation
+    unrankAux(8, x, identity);   //Put in identity the unranked permutation
 
     //Transform sequence into a Rubik's cube configuration 
     for (i = 0; i < 8; i++) {
-        unsigned char cubie = inverse[i];
+        unsigned char cubie = identity[i];
         cube.setCubie(i*2, cubie);       //i*2 because these are corner cubies
     }
 
