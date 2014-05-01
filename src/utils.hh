@@ -16,8 +16,8 @@ extern void swap(int *,int *);
 
 extern int pow(int,int);
 
-extern int rankAux(int,int *,int *);
+extern int rankAux(int,int,int *,int *);
 
-extern void unrankAux(int,int,int *);
+extern void unrankAux(int,int,int,int *);
 
 #endif

@@ -44,39 +44,43 @@ int pow(int b, int e) {
 
 
 /**
-  * Ranks an array (sequence) of int
+  * Ranks the sub-set in the permutation from n-k...n-1 
+  * pieces of an array (sequence) of integers
+  * @param 'k'  :   size of subset
   * @param 'n'  :   size of any of the permutations 
   * @param 'seq'    : sequence to be rakend
   * @param 'inverse': inverse of the identity
-  * @return Ranked permutation int
+  * @return Int of ranked k-permutation
   */ 
 
-int rankAux(int n, int *seq, int *inverse) {
+int rankAux(int k, int n, int *seq, int *inverse) {
 
-    if (n == 1)
+    if (n == k)
         return 0;
 
     int s = seq [n-1];
     swap(&seq[n-1], &seq[inverse[n-1]]);
     swap(&inverse[s], &inverse[n-1]);
 
-    return s + n*(rankAux(n-1, seq, inverse));
+    return s + n*(rankAux(k,n-1, seq, inverse));
 };
 
 
 /**
-  * Unranks an array (sequence) of int
+  * Unranks the subset of size k from n-k...n-1 of 
+  * an array (sequence) of integers
+  * @param 'k'  :   size of subset
   * @param 'n'         :   size of any of the permutations 
   * @param 'r'         :   ranked value to be unranked
   * @param 'identity'  :   identity permutation
   */
 
-void unrankAux(int n, int r, int *identity) {
+void unrankAux(int k, int n, int r, int *identity) {
 
-    if (n > 0) {
+    if (n > k) {
         int temp = identity[n-1];
         identity[n-1] = identity[r % n];
         identity[r % n] = temp;
-        unrankAux(n-1, r / n, identity);
+        unrankAux(k,n-1, r / n, identity);
     }
 };

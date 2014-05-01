@@ -62,6 +62,7 @@ class Rubikpd {
         int rankE(int,Rubik);
         int rankEIDs(int,Rubik);
         int rankEO(int,Rubik);
+        void auxiliaryRankEIDs(int *,int *,int *);
 
         //Methods to unrank permutation of edges cubies in edges1
         Rubik unrankE(int,int);

@@ -135,7 +135,7 @@ int Rubikpd::rankCIDs(Rubik cube) {
     for (i = 0; i < 8; i++)
       inverse[cornersid[i]] = i;
 
-    return (rankAux(8, cornersid, inverse));  //rank a sequence of integers
+    return (rankAux(1, 8, cornersid, inverse));  //rank a sequence of integers
 };
 
 
@@ -205,11 +205,11 @@ Rubik Rubikpd::unrankCIDs(int x) {
     int identity[8] = {0,1,2,3,4,5,6,7};
     int i;
 
-    unrankAux(8, x, identity);   //Put in identity the unranked permutation
+    unrankAux(0, 8, x, identity);   //Put in identity the unranked permutation
 
     //Transform sequence into a Rubik's cube configuration 
     for (i = 0; i < 8; i++) {
-        unsigned char cubie = identity[i];
+        unsigned char cubie = identity[i]*2;
         cube.setCubie(i*2, cubie);       //i*2 because these are corner cubies
     }
 
@@ -279,29 +279,96 @@ int Rubikpd::rankEIDs(int table, Rubik cube) {
     int k = 0;
     for (i = offset; i < 8 + offset; i++) {
         if (i % 2 != 0) {
-            edgesid[k] = (cube.getId(i) - offset) / 2;
+            int id = cube.getId(i);
+            int elem = id / 2;
+            if (id > 16) {
+                elem = id - 8;
+            }
+            edgesid[k] = elem;
             k++;
         }
     }
 
-    int firstmiddle = 16 + (offset / 4); 
-    edgesid[4] = cube.getId(firstmiddle) / 2;
-    edgesid[5] = cube.getId(firstmiddle + 1) / 2;
+    //Same goes for edges in middle face
+    int firstmiddle = 16 + 2*offset; 
+    k =  4;
+    for (i = firstmiddle; i <= firstmiddle + 1; i++) {
+        int id = cube.getId(i);
+        int elem = id / 2;
+        if (id > 16) {
+            elem = id - 8;
+        }
+        edgesid[k] = elem / 2;
+        k++;
+    }
 
-    int inverse[6] = {0,1,2,3,4,5};
-    return (rankAux(6, edgesid, inverse));  //rank a sequence of integers
+    int set[12], inverse[12];
+    this->auxiliaryRankEIDs(edgesid, set, inverse);
+
+    return (rankAux(6, 12, set, inverse));  //rank a sequence of integers
+};
+
+
+/**
+  * Set the three elementes necessary to do k-permutations of an n-set
+  * @param 'edgesid'   :   K elements to be permuted
+  * @param 'set'       :   Array of integers to be ranked
+  * @param 'inverse'   :   Invers of set
+  */
+
+void Rubikpd::auxiliaryRankEIDs(int *edgesid, int *set, int *inverse) {
+    int i, k;
+    //Get subset
+    int appear[12];
+
+    for (i = 0; i < 12; i++)
+        appear[i] = 0;
+
+    for (i = 0; i < 12; i++)
+        appear[edgesid[i]] = 1;
+
+    //Edgesid elements are the last K-elements 
+    for (i = 6; i < 12; i++)    
+        set[i] = edgesid[i % 6];
+
+    k = 0;
+    for (i = 0; i < 12; i++) {
+        if (appear[i] == 0) {
+            set[k] = i;
+            k++;
+        }
+    }
+
+    //Calculate inverse 
+    for (i = 0; i < 12; i++)
+        inverse[set[i]] = i;
 };
 
 
 /**
   * Ranks a Rubik's cube partly by taking only six edges orientations 
-  * It uses rankAux from utils.hh to rank a permutation of 
-  * integers into an integer
+  *
+  * @section Description
+  * Edge cubies have only two possible directions in a certain position
   * @param 'cube' : Rubik's cube configuration
   * @return IDs permutation (value between 0 and 63)
   */
 
 int Rubikpd::rankEO(int table, Rubik cube) {
+    int offset = (table-1)*8;
+    int rank = 0;
+    int i;
+
+    for (i = 0 + offset; i < 8 + offset; i++) {
+        //represent orientations as 0, or 1 
+        int orientation = cube.getOrientation(i) % 2;
+        rank = (rank*2) + orientation;
+
+    }
+    rank = (rank*2) + cube.getOrientation(16 + 2*offset);
+    rank = (rank*2) + cube.getOrientation(17 + 2*offset);
+
+    return rank;
 };
 
 
@@ -315,4 +382,35 @@ int Rubikpd::rankEO(int table, Rubik cube) {
   */
 
 Rubik Rubikpd::unrankEIDs(int table, int x) {
+    Rubik cube;
+    int offset = (table-1)*8;
+    int identity[12] = {0,1,2,3,4,5,6,7,8,9,10,11};
+
+    unrankAux(6, 12, x, identity);
+
+    //Transform sequence into a Rubik's cube configuration
+    int k = 0;
+    int i;
+    for (i = 6; i < 10; i++) {
+        unsigned char cubie = identity[i]*2;
+        if (identity[i] > 8) {
+            cubie = identity[i] + 8;  
+        }
+        cube.setCubie(k*2 + 1 + offset, cubie);
+        k++;
+    }
+    
+    int middle = 16 + 2*offset;
+    k = 4;
+    for (i = 10; i < 12; i++) {
+        unsigned char cubie = identity[i]*2;
+        if (identity[i] > 8)
+            cubie = identity[i] + 8;
+
+        cube.setCubie(middle,cubie);
+        middle++;
+        k++;
+    } 
+
+    return cube;
 };
