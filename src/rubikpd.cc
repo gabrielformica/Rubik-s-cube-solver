@@ -228,17 +228,20 @@ Rubik Rubikpd::unrankCO(int x) {
     Rubik cube;
     int y = x;
     int i;
+    int k = 0;
 
-    for (i = 0; i < 8; i++) {
+    for (i = 7; i >= 0; i--) {
         //calculate orientation of di with pure magic
-        int di = y / pow(3, i);     
-        y = y-(di*pow(3, i));     
+        int power = pow(3, i);
+        int di = y / power;     
+        y = y-(di*power);     
 
         if (di == 0)
             di = 4;    //di was oriented to X-axis, wich is 100 in Rubik class
 
         unsigned char cubie = di; 
-        cube.setCubie(i*2, cubie);
+        cube.setCubie(k*2, cubie);
+        k++;
     }
 
     return cube;
@@ -357,16 +360,23 @@ void Rubikpd::auxiliaryRankEIDs(int *edgesid, int *set, int *inverse) {
 int Rubikpd::rankEO(int table, Rubik cube) {
     int offset = (table-1)*8;
     int rank = 0;
+
+    //Left or Right face
     int i;
-
-    for (i = 0 + offset; i < 8 + offset; i++) {
-        //represent orientations as 0, or 1 
-        int orientation = cube.getOrientation(i) % 2;
-        rank = (rank*2) + orientation;
-
+    for (i = 1; i <= 7; i = i + 2) {
+        if (cube.getOrientation(i + offset) == 4) 
+            rank = rank + 1;
+        rank = rank*2;
     }
-    rank = (rank*2) + cube.getOrientation(16 + 2*offset);
-    rank = (rank*2) + cube.getOrientation(17 + 2*offset);
+
+    //Middle face
+    for (i = 0; i < 2; i++) {
+        if (cube.getOrientation(16 + i + 2*offset) == 2)
+            rank = rank + 1;
+        rank = rank * 2;
+    }
+
+    rank = rank / 2;
 
     return rank;
 };
@@ -412,5 +422,50 @@ Rubik Rubikpd::unrankEIDs(int table, int x) {
         k++;
     } 
 
+    return cube;
+};
+
+
+/**
+  * Gets a Rubik's cube configuration without IDs (only orientations)
+  * from an integer value between 0 and 63 (ranked orientation permutations)
+  * @param 'x' : permutation of corner orientations represented as an integer
+  * @return Rubik's cube configuration
+  */
+
+Rubik Rubikpd::unrankEO(int table, int x) {
+    Rubik cube;
+    int y = x;
+    int i;
+    int offset = (table-1)*8;
+    int k = 1 + offset;
+    for (i = 5; i >= 0; i--) {
+        //calculate orientation of di with pure magic
+        int power = pow(2, i);
+        int di = y / power;
+        y = y - (di*power);
+        
+        unsigned char cubie;
+
+        if  ((k == 1 + offset) || (k == 5 + offset)) {
+            cubie = 1;
+            if (di == 1) 
+                cubie = 4;
+        }
+        else if ((k == 3 + offset) || (k == 7 + offset)) {
+            cubie = 2;
+            if (di == 1) 
+                cubie = 4;
+        }
+        else {
+            cubie = 1;
+            if (di == 1)
+                di = 2;
+        }
+
+        cube.setCubie(k, di);
+        k = k + 2;
+    }
+    
     return cube;
 };
