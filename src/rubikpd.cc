@@ -16,6 +16,32 @@ using namespace std;
 
 
 /**
+  * Returns the maximum value between the three pattern databases
+  */
+
+int Rubikpd::heuristic(Rubik cube) {
+    int rankc = this->rankC(cube);
+    int ranke1 = this->rankE(1, cube);
+    int ranke2 = this->rankE(2, cube);
+
+    int hcorners = this->corners[rankc];
+    int he1 = this->edges1[ranke1];
+    int he2 = this->edges2[ranke2];
+
+    //Get maximum value
+    int max;
+    if ((hcorners >= he1) && (hcorners >= he2))
+        max = hcorners;
+    else if ((he1 >= hcorners) && (he1 >= he2))
+        max = he1;
+    else
+        max = he2;
+
+    return max;
+
+};
+
+/**
   * Gets cost of element 'i' in 'corners' array
   * @param 'i' : subindex
   * @return corners[i]
@@ -23,6 +49,17 @@ using namespace std;
 
 int Rubikpd::getCCost(int i) {
     return this->corners[i];   
+};
+
+
+/**
+  * Initializes corners, edges1, edges2
+  */
+
+void Rubikpd::initializeAll() {
+    this->initializeCorners();
+    this->initializeEdge(1);    //edges1
+    this->initializeEdge(2);    //edges2
 };
 
 

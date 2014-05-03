@@ -41,7 +41,9 @@ class Rubikpd {
         int edges2[42577920];
      
     public:
+        int heuristic(Rubik);
         int getCCost(int);       //corners cost
+        void initializeAll();
     private:
         void initializeCorners();
         void initializeEdge(int);
