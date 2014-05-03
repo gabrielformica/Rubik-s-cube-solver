@@ -87,7 +87,7 @@ void RubikNode::generateChildren() {
             continue;
         }
         RubikNode node;
-        node.makeNode((*it), this, faces[i / 3], 0);
+        node.makeNode((*it), this, faces[i / 3], this->cost + 1);
         children.push_back(node);
         i++;
     }
