@@ -31,6 +31,9 @@ class RubikNode {
         bool isGoal();
         void generateChildren();
         std::list<char> extractSolution(); 
+        int getCost();
+        Rubik getState();
+        std::list<RubikNode> getChildren();
 };
 
 #endif

@@ -111,3 +111,33 @@ list<char> RubikNode::extractSolution() {
     }
     return path;
 };
+
+
+/**
+  * Returns the cost of the path to this node
+  * @return The cost of the path
+  */
+
+int RubikNode::getCost() {
+    return this->cost;
+};
+
+
+/**
+  * Returns state
+  * @return this->state
+  */
+
+Rubik RubikNode::getState() {
+    return this->state;
+};
+
+
+/**
+  * Returns the list of children
+  * @return this->children
+  */
+
+list<RubikNode> RubikNode::getChildren() {
+    return this->children;
+};

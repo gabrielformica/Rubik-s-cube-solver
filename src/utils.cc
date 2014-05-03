@@ -12,6 +12,34 @@
 
 
 /**
+  * Returns the minimun of 'x' and 'y'
+  * @param 'x' : integer
+  * @param 'y' : integer
+  * @return min(x,y) 
+  */
+
+int min(int x, int y) {
+    if (x <= y)
+        return x;
+    return y;
+};
+
+
+/**
+  * Returns the maximun of 'x' and 'y'
+  * @param 'x' : integer
+  * @param 'y' : integer
+  * @return max(x,y)
+  */
+
+int max(int x, int y) {
+    if (x >= y)
+        return x;
+    return y;
+};
+
+
+/**
   * Swap two integer elements (pointers to integers)
   * @param 'x'   :   pointer to integer
   * @param 'y'   :   pointer to integer

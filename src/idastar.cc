@@ -8,10 +8,16 @@
   * IDA* algorithm
   */
 
+#include <climits>
+#include <stdlib.h>
+#include <stdio.h>
+#include <list>
+#include <string>
 #include "idastar.hh"
 #include "rubik.hh"
 #include "rubiknode.hh"
 
+using namespace std;
 
 /**
   * Bounded DFS
@@ -19,7 +25,44 @@
   * @param 'cost'  :  Cost of the path
   */
 
-void DFScontour(RubikNode *node, int cost) {
+Solution *DFScontour(RubikNode *node, int limit, Rubikpd rpd) {
+    Solution *sol;
+
+    if ((sol = (Solution *) malloc(sizeof(Solution))) == NULL) {
+        perror("Malloc Failed");
+        exit(1);
+    }
+
+    int gcost = node->getCost();
+    int hcost = rpd.heuristic(node->getState());
+
+    if (gcost + hcost > limit) {
+        sol->cost = gcost + hcost;
+        return sol;
+    }
+
+    if (node->isGoal()) {
+        sol->path = node->extractSolution();
+        sol->cost = gcost;
+        return sol;
+    }
+
+    node->generateChildren();
+    list<RubikNode> children = node->getChildren();
+    int newlimit = INT_MAX;
+    for (list<RubikNode>::iterator it = children.begin(); 
+                                    it != children.end(); 
+                                    it++) {
+
+        RubikNode node = *it;
+        sol = DFScontour(&node, limit, rpd);
+        if (sol != NULL) 
+            return sol;
+
+        newlimit = min(newlimit, sol->cost);
+    }
+    return sol;
+    
 };
 
 
@@ -29,15 +72,17 @@ void DFScontour(RubikNode *node, int cost) {
   * @return Optimal solution      
   */
 
+Solution *IDAstar(Rubik problem, Rubikpd rpd) {
+    RubikNode node;
+    node.makeRootNode(problem);
+    int limit = rpd.heuristic(node.getState());
 
-int IDAstar(Rubik problem) {
-    RubikNode root;
-    root.makeRootNode(problem);
-    int cost = 0;
-
-    while (1) {
-        DFScontour(&root, cost);
-        return cost;
+    while (node.getCost() < INT_MAX) {
+        Solution *sol;
+        sol = DFScontour(&node, limit, rpd);
+        if  (! sol->path.empty())
+            return sol;
     }
+    return NULL;
 };
 

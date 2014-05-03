@@ -11,10 +11,20 @@
 #ifndef IDASTAR_HH
 #define IDASTAR_HH
 
+#include <list>
 #include "rubik.hh" 
+#include "rubiknode.hh"
+#include "rubikpd.hh"
 
-extern void DFScontour(RubikNode, int);
+typedef struct Solution Solution;
 
-extern int IDAstar(Rubik);
+struct Solution {
+    std::list<char> path;
+    int cost;
+};
+
+extern Solution *DFScontour(RubikNode *,int,Rubikpd);
+
+extern Solution *IDAstar(Rubik,Rubikpd);
 
 #endif
