@@ -258,6 +258,7 @@ Rubik Rubikpd::unrankCIDs(int x) {
     //Transform sequence into a Rubik's cube configuration 
     for (i = 0; i < 8; i++) {
         unsigned char cubie = identity[i]*2;
+        cubie = cubie << 3;
         cube.setCubie(i*2, cubie);       //i*2 because these are corner cubies
     }
 
@@ -477,6 +478,7 @@ Rubik Rubikpd::unrankEIDs(int table, int x) {
         if (identity[i] > 8) {
             cubie = identity[i] + 8;  
         }
+        cubie = cubie << 3;
         cube.setCubie(k*2 + 1 + offset, cubie);
         k++;
     }
@@ -488,6 +490,7 @@ Rubik Rubikpd::unrankEIDs(int table, int x) {
         if (identity[i] > 8)
             cubie = identity[i] + 8;
 
+        cubie = cubie << 3;
         cube.setCubie(middle,cubie);
         middle++;
         k++;
