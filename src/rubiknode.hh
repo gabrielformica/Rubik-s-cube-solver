@@ -8,8 +8,8 @@
   * Rubik's cube node class header
   */
 
-#ifndef RUBIKTREE_HH
-#define RUBIKTREE_HH
+#ifndef RUBIKNODE_HH
+#define RUBIKNODE_HH
 
 #include <list>
 #include "rubik.hh"

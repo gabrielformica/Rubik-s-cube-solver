@@ -9,13 +9,13 @@
   */
 
 #include <climits>
-#include <stdlib.h>
-#include <stdio.h>
-#include <list>
-#include <string>
 #include "idastar.hh"
 #include "rubik.hh"
 #include "rubiknode.hh"
+#include "rubikpd.hh"
+#include <stdio.h>
+#include <stdlib.h>
+#include <list>
 
 using namespace std;
 
@@ -85,4 +85,3 @@ Solution *IDAstar(Rubik problem, Rubikpd rpd) {
     }
     return NULL;
 };
-

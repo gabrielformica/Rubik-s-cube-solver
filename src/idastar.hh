@@ -11,10 +11,14 @@
 #ifndef IDASTAR_HH
 #define IDASTAR_HH
 
-#include <list>
+#include <climits>
 #include "rubik.hh" 
+#include "rubik.hh"
 #include "rubiknode.hh"
 #include "rubikpd.hh"
+#include <stdio.h>
+#include <stdlib.h>
+#include <list>
 
 typedef struct Solution Solution;
 
