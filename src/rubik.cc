@@ -17,6 +17,32 @@ using namespace std;
 
 
 /**
+  * Convert this Rubik's cube configuration into the goal configuration
+  */
+
+void Rubik::transformToGoal() {
+    int i;
+    for (i = 0; i < 16; i++) {
+        unsigned char id = i;
+        id = id << 3;                //now id is in the right position
+
+        unsigned char orientation = '\x01';
+        if (i % 4 == 3) 
+            orientation = '\x02';
+
+        this->setCubie(i, id | orientation);
+    }
+
+    for (i = 16; i < 20; i++) {
+        unsigned char id = i;
+        id = id << 3;                //now id is in the right position
+        unsigned char orientation = '\x01';
+        this->setCubie(i, id | orientation);
+    }
+};
+
+
+/**
   * Clones this Rubik's cube
   * @return A clone of this Rubik's cube
   */
