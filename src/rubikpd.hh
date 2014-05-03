@@ -44,9 +44,7 @@ class Rubikpd {
         int getCCost(int);       //corners cost
     private:
         void initializeCorners();
-        void initializeEdges();
-
-        Rubik goalForCorners();
+        void initializeEdge(int);
 
         //Methods to rank permutation of corners cubies
         int rankC(Rubik);      
@@ -61,8 +59,8 @@ class Rubikpd {
         //Methods to rank permutation of edges cubies in edges1
         int rankE(int,Rubik);
         int rankEIDs(int,Rubik);
-        int rankEO(int,Rubik);
         void auxiliaryRankEIDs(int *,int *,int *);
+        int rankEO(int,Rubik);
 
         //Methods to unrank permutation of edges cubies in edges1
         Rubik unrankE(int,int);

@@ -27,7 +27,7 @@ int Rubikpd::getCCost(int i) {
 
 
 /**
-  * Initializes pattern database of corners configuration
+  * Initializes pattern database of corner permutations 
   */
 
 void Rubikpd::initializeCorners() {
@@ -36,17 +36,19 @@ void Rubikpd::initializeCorners() {
     for (i = 0; i < 264539520; i++) 
         this->corners[i] = -1;
 
-    int goal = this->rankC(this->goalForCorners());
+    Rubik goalcube;
+    goalcube.transformToGoal();
+    int goal = this->rankC(goalcube);
     this->corners[goal] = 0;
 
     list<int> open;   //open queue
     open.push_back(goal);
     
     while (!open.empty()) {
-        int parent = open.front();
-        open.pop_front();                      
+        int parent = open.front();        //top
+        open.pop_front();                 //pop 
 
-        Rubik cube = unrankC(parent);
+        Rubik cube = this->unrankC(parent);
         list<Rubik> s = cube.getSucc();    //Successors
 
         for (list<Rubik>::iterator it = s.begin(); it != s.end(); it++) {
@@ -64,34 +66,43 @@ void Rubikpd::initializeCorners() {
 
 
 /**
-  * Initializes pattern database of edges configuration
+  * Initializes pattern database of edge permutations 
+  * @param 'table' : array 'edges' to be initialized (can be 1 or 2)
   */
 
-void Rubikpd::initializeEdges() {
-};
+void Rubikpd::initializeEdge(int table) {
+    int *edges[2] = {this->edges1, this->edges2};
+    int t = table-1; //which element in the array 'edges' is
 
-
-/**
-  * Returns the goal Rubik's cube for the corners
-  * @return Rubik's cube configurations with solved corners
-  */
-
-Rubik Rubikpd::goalForCorners() {
-    Rubik cube;
-
+    //initialize every cost in -1
     int i;
-    for (i = 0; i < 8; i++) {
-        unsigned char id = i*2;
-        id << 3;                //now id is in the right position
+    for (i = 0; i < 42577920; i++)
+        edges[t][i] = -1;
 
-        unsigned char orientation = '\x01';
-        if (i % 4 == 3) 
-            orientation = '\x02';
+    Rubik goalcube;
+    goalcube.transformToGoal();
+    int goal = this->rankEIDs(table, goalcube);
 
-        cube.setCubie(i*2, id || orientation);
+    list<int> open;     //open queue
+    open.push_back(goal);
+
+    while (!open.empty()) {
+        int parent = open.front(); //top
+        open.pop_front();          //pop
+
+        Rubik cube = this->unrankE(table, parent);
+        list<Rubik> s = cube.getSucc();  //successors
+
+        for (list<Rubik>::iterator it = s.begin(); it != s.end(); it++) {
+            int child = this->rankE(table, *it);
+
+            if (edges[t][child] != -1)
+                continue;
+            
+            edges[t][child] = edges[t][parent] + 1;
+            open.push_back(child);
+        }
     }
-
-    return cube;
 };
 
 
@@ -169,7 +180,7 @@ int Rubikpd::rankCO(Rubik cube) {
 
 
 /**
-  * Unranks an corner permutation
+  * Unranks a permutation of corner cubies
   * @param 'p' : integer value between 0 and 264.539.519
   * @return Rubik's cube configuration with null values in edge cubies
   */
@@ -183,7 +194,7 @@ Rubik Rubikpd::unrankC(int p) {
     int i;
     for (i = 0; i < 20; i++) {
         //Merge ID with orientation to get final cubie
-        unsigned char cubie = IDs.getCubie(i) || orientations.getCubie(i);
+        unsigned char cubie = IDs.getCubie(i) | orientations.getCubie(i);
         cube.setCubie(i, cubie);
     }
 
@@ -379,6 +390,29 @@ int Rubikpd::rankEO(int table, Rubik cube) {
     rank = rank / 2;
 
     return rank;
+};
+
+
+/**
+  * Unranks a permutation of edge cubies
+  * @param 'p' : integer value between 0 and 42.577.919
+  * @return Rubik's cube configuration 
+  */
+
+Rubik Rubikpd::unrankE(int table, int p) {
+    int t = 64;   //2^6
+    Rubik cube;
+    Rubik IDs = this->unrankEIDs(table, p / t);
+    Rubik orientations = this->unrankEO(table, p % t);
+
+    int i;
+    for (i = 0; i < 20; i++) {
+        //Merge ID with orientation to get final cubie
+        unsigned char cubie = IDs.getCubie(i) | orientations.getCubie(i);
+        cube.setCubie(i, cubie);
+    }
+
+    return cube;
 };
 
 
