@@ -115,8 +115,8 @@ void Rubikpd::initializeEdges() {
 
     Rubik goalcube;
     goalcube.transformToGoal();
-    int goal2 = this->rankE(2, goalcube);
     int goal1 = this->rankE(1, goalcube);
+    int goal2 = this->rankE(2, goalcube);
 
     list<int *> open;     //open queue for edges1
     int goals[2] = {goal1, goal2};
@@ -130,8 +130,8 @@ void Rubikpd::initializeEdges() {
         int parent2 = parents[1];
 
         //Get cube
-        Rubik cube1 = this->unrankE(1, parents[0]);
-        Rubik cube2 = this->unrankE(2, parents[1]);
+        Rubik cube1 = this->unrankE(1, parent1);
+        Rubik cube2 = this->unrankE(2, parent2);
         Rubik cube;
         int i;
         for (i = 0; i < 8; i++)
@@ -249,6 +249,7 @@ int Rubikpd::rankCO(Rubik cube) {
 Rubik Rubikpd::unrankC(int p) {
     int t = 6561;    //3^8
     Rubik cube;  
+    cube.clean();
     Rubik IDs = this->unrankCIDs(p / t);
     Rubik orientations = this->unrankCO(p % t);
     
@@ -274,6 +275,7 @@ Rubik Rubikpd::unrankC(int p) {
 
 Rubik Rubikpd::unrankCIDs(int x) {
     Rubik cube;
+    cube.clean();
     int identity[8] = {0,1,2,3,4,5,6,7};
     int i;
 
@@ -299,6 +301,7 @@ Rubik Rubikpd::unrankCIDs(int x) {
 
 Rubik Rubikpd::unrankCO(int x) {
     Rubik cube;
+    cube.clean();
     int y = x;
     int i;
     int k = 0;
@@ -464,6 +467,7 @@ int Rubikpd::rankEO(int table, Rubik cube) {
 Rubik Rubikpd::unrankE(int table, int p) {
     int t = 64;   //2^6
     Rubik cube;
+    cube.clean();
     Rubik IDs = this->unrankEIDs(table, p / t);
     Rubik orientations = this->unrankEO(table, p % t);
 
@@ -489,6 +493,8 @@ Rubik Rubikpd::unrankE(int table, int p) {
 
 Rubik Rubikpd::unrankEIDs(int table, int x) {
     Rubik cube;
+    cube.clean();
+    
     int offset = (table-1)*8;
     int identity[12] = {0,1,2,3,4,5,6,7,8,9,10,11};
 
@@ -499,7 +505,7 @@ Rubik Rubikpd::unrankEIDs(int table, int x) {
     int i;
     for (i = 6; i < 10; i++) {
         unsigned char cubie = identity[i]*2 + 1;
-        if (identity[i] > 8) {
+        if (identity[i] >= 8) {
             cubie = identity[i] + 8;  
         }
         cubie = cubie << 3;
@@ -508,16 +514,14 @@ Rubik Rubikpd::unrankEIDs(int table, int x) {
     }
     
     int middle = 16 + (offset / 4);
-    k = 4;
     for (i = 10; i < 12; i++) {
         unsigned char cubie = identity[i]*2 + 1;
-        if (identity[i] > 8)
+        if (identity[i] >= 8)
             cubie = identity[i] + 8;
 
         cubie = cubie << 3;
-        cube.setCubie(middle,cubie);
+        cube.setCubie(middle, cubie);
         middle++;
-        k++;
     } 
 
     return cube;
@@ -533,11 +537,12 @@ Rubik Rubikpd::unrankEIDs(int table, int x) {
 
 Rubik Rubikpd::unrankEO(int table, int x) {
     Rubik cube;
-    int y = x;
+    cube.clean();
     int i;
+    int y = x;
     int offset = (table-1)*8;
     int k = 1 + offset;
-    for (i = 5; i >= 0; i--) {
+    for (i = 5; i > 1; i--) {
         //calculate orientation of di with pure magic
         int power = pow(2, i);
         int di = y / power;
@@ -555,15 +560,25 @@ Rubik Rubikpd::unrankEO(int table, int x) {
             if (di == 1) 
                 cubie = 4;
         }
-        else {
-            cubie = 1;
-            if (di == 1)
-                di = 2;
-        }
 
-        cube.setCubie(k, di);
+        cube.setCubie(k, cubie);
         k = k + 2;
     }
+
+    unsigned char cubie;
+    int di = y / 2;
+    y = y - (di*2);
+    cubie = 1;
+    if (di == 1)
+        cubie = 4;
+
+    cube.setCubie(16 + (offset /4), cubie);
+    di = y;
+    cubie = 1;
+    if (di == 1)
+        cubie = 4;
+    
+    cube.setCubie(17 + (offset /4), cubie);
     
     return cube;
 };

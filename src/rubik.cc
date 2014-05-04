@@ -17,6 +17,17 @@ using namespace std;
 
 
 /**
+  * Set all cubies to '\x00'
+  */
+
+void Rubik::clean() {
+    int i;
+    for (i = 0; i < 20; i++)
+        this->setCubie(i,'\x00');
+};
+
+
+/**
   * Convert this Rubik's cube configuration into the goal configuration
   */
 

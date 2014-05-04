@@ -27,6 +27,7 @@ class Rubik {
         unsigned char middle[4]; //16 to 19 cubie
 
     public:
+        void clean();
         void transformToGoal();
         Rubik clone();
         void setCubie(int,unsigned char);
