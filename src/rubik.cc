@@ -34,21 +34,21 @@ void Rubik::clean() {
 void Rubik::transformToGoal() {
     int i;
     for (i = 0; i < 16; i++) {
-        unsigned char id = i;
-        id = id << 3;                //now id is in the right position
+        unsigned char position = i;
+        position = position << 3;      //now position is in the right place
 
         unsigned char orientation = '\x01';
         if (i % 4 == 3) 
             orientation = '\x02';
 
-        this->setCubie(i, id | orientation);
+        this->setCubie(i, position | orientation);
     }
 
     for (i = 16; i < 20; i++) {
-        unsigned char id = i;
-        id = id << 3;                //now id is in the right position
+        unsigned char position = i;
+        position = position << 3;     //now position is in the right place
         unsigned char orientation = '\x01';
-        this->setCubie(i, id | orientation);
+        this->setCubie(i, position | orientation);
     }
 };
 
@@ -84,7 +84,7 @@ void Rubik::setCubie(int i, unsigned char cubie) {
         this->right[j % 8] = cubie;
     else if ((j >= 0) && (j < 20))
         this->middle[j % 8] = cubie;
-}
+};
 
 
 /**
@@ -110,28 +110,34 @@ unsigned char Rubik::getCubie(int i) {
 
 
 /**
+  *
+  */
+
+void Rubik::changePositionTo(int i, int position) {
+    unsigned char orientation;
+    orientation = this->getOrientation(i); 
+    unsigned char cubie = position;
+    cubie = cubie << 3;  //Making place for orientation
+    cubie = cubie | orientation;
+    this->setCubie(i, cubie);
+};
+
+
+/**
   * Turns 90 degrees the left face clockwise
   */
 
 void Rubik::turnLeft() { 
-    //back up corners position
-    unsigned char temp1 = this->left[0];
-
-    //turn corners
-    this->left[0] = this->swapYZ(this->left[2]);    
-    this->left[2] = this->swapYZ(this->left[4]);
-    this->left[4] = this->swapYZ(this->left[6]);
-    this->left[6] = this->swapYZ(temp1);
-    
-    //back up edges position
-    temp1 = this->left[1];
-
-    //turn edges
-    this->left[1] = this->swapYZ(this->left[3]);
-    this->left[3] = this->swapYZ(this->left[5]);
-    this->left[5] = this->swapYZ(this->left[7]);
-    this->left[7] = this->swapYZ(temp1);
-}
+    //Look up for cubies that are in positions of the left face
+    int i;
+    for (i = 0; i < 20; i++) {
+        if (this->getPosition(i) < 8) {
+            this->setCubie(i, this->swapYZ(this->getCubie(i))); //swap in situ 
+            int newposition = (this->getPosition(i) + 6) % 8;
+            this->changePositionTo(i, newposition);
+        }
+    }
+};
 
 
 /**
@@ -139,24 +145,16 @@ void Rubik::turnLeft() {
   */
 
 void Rubik::turnRight() {
-    //back up corners position
-    unsigned char temp1 = this->right[0];
-
-    //turn corners
-    this->right[0] = this->swapYZ(this->right[2]);    
-    this->right[2] = this->swapYZ(this->right[4]);
-    this->right[4] = this->swapYZ(this->right[6]);
-    this->right[6] = this->swapYZ(temp1);
-    
-    //back up edges position
-    temp1 = this->right[1];
-
-    //turn edges
-    this->right[1] = this->swapYZ(this->right[3]);
-    this->right[3] = this->swapYZ(this->right[5]);
-    this->right[5] = this->swapYZ(this->right[7]);
-    this->right[7] = this->swapYZ(temp1);
-}
+    //Look up for cubies that are in positions of the right face
+    int i;
+    for (i = 0; i < 20; i++) {
+        if ((this->getPosition(i) >= 8) && (this->getPosition(i) < 16)) {
+            this->setCubie(i, this->swapYZ(this->getCubie(i))); //swap in situ 
+            int newposition = ((this->getPosition(i) + 6) % 8) + 8;
+            this->changePositionTo(i, newposition);
+        }
+    }
+};
 
 
 /**
@@ -164,28 +162,37 @@ void Rubik::turnRight() {
   */
 
 void Rubik::turnTop() {
-    //back up corners
-    unsigned char temp1 = this->left[6];
-    unsigned char temp2 = this->right[6];
-
-    //turn corners
-    this->left[6] = this->swapXY(this->left[4]);    
-    this->right[6] = this->swapXY(this->right[4]);
-
-    this->left[4] = this->swapXY(temp2);
-    this->right[4] = this->swapXY(temp1);
-
-    //back up edges
-    temp1 = this->middle[2];
-    temp2 = this->right[5];
-
-    //turn edges
-    this->middle[2] = this->swapXY(this->left[5]);
-    this->right[5] = this->swapXY(temp1);
-
-    this->left[5] = this->swapXY(this->middle[1]);
-    this->middle[1] = this->swapXY(temp2);
-}
+    //Look up for cubies that are in positions of the top face
+    int i;
+    for (i = 0; i < 20; i++) {
+        int newposition;
+        int position = this->getPosition(i);
+        switch (position) {
+            case 4 :  newposition = 6; 
+                      break;
+            case 5 :  newposition = 18;
+                      break;
+            case 6 :  newposition = 12;
+                      break;
+            case 12:  newposition = 14;
+                      break;
+            case 13:  newposition = 17;
+                      break;
+            case 14:  newposition = 4;
+                      break;
+            case 17:  newposition = 5;
+                      break;
+            case 18:  newposition = 13;
+                      break;
+            default:  newposition = -1;  //This cubie isnt in position
+                      break;
+        }
+        if (newposition != -1) {
+            this->setCubie(i, this->swapXY(this->getCubie(i))); //swap in situ
+            this->changePositionTo(i, newposition);
+        }
+    }
+};
 
 
 /**
@@ -193,28 +200,37 @@ void Rubik::turnTop() {
   */
 
 void Rubik::turnBottom() {
-    //back up corners
-    unsigned char temp1 = this->left[2];
-    unsigned char temp2 = this->right[2];
-
-    //turn corners
-    this->left[2] = this->swapXY(this->left[0]);    
-    this->right[2] = this->swapXY(this->right[0]);
-
-    this->left[0] = this->swapXY(temp2);
-    this->right[0] = this->swapXY(temp1);
-
-    //back up edges
-    temp1 = this->middle[0];
-    temp2 = this->right[1];
-
-    //turn edges
-    this->middle[0] = this->swapXY(this->left[1]);
-    this->right[1] = this->swapXY(temp1);
-
-    this->left[1] = this->swapXY(this->middle[3]);
-    this->middle[3] = this->swapXY(temp2);
-}
+    //Look up for cubies that are in positions of the top face
+    int i;
+    for (i = 0; i < 20; i++) {
+        int newposition;
+        int position = this->getPosition(i);
+        switch (position) {
+            case 0 : newposition = 2;
+                     break;
+            case 1 : newposition = 16;
+                     break;
+            case 2 : newposition = 8;
+                     break;
+            case 8 : newposition = 10;
+                     break;
+            case 9 : newposition = 19;
+                     break;
+            case 10: newposition = 0;
+                     break;
+            case 16: newposition = 9;
+                     break;
+            case 19: newposition = 1;
+                     break;
+            default: newposition = -1;
+                     break;
+        }
+        if (newposition != -1) {
+            this->setCubie(i, this->swapXY(this->getCubie(i))); //swap in situ
+            this->changePositionTo(i, newposition);
+        }
+    }
+};
 
 
 /**
@@ -222,24 +238,37 @@ void Rubik::turnBottom() {
   */
 
 void Rubik::turnFront() {
-    //back up corners
-    unsigned char temp1 = this->left[2];
-
-    //turn corners
-    this->left[2] = this->swapXZ(this->right[0]);
-    this->right[0] = this->swapXZ(this->right[6]);
-    this->right[6] = this->swapXZ(this->left[4]);
-    this->left[4] = this->swapXZ(temp1);
-
-    //back up edges
-    temp1 = this->left[3];
-
-    //turn edges
-    this->left[3] = this->swapXZ(this->middle[0]);
-    this->middle[0] = this->swapXZ(this->right[7]);
-    this->right[7] = this->swapXZ(this->middle[1]);
-    this->middle[1] = this->swapXZ(temp1);
-}
+    //Look up for cubies that are in positions of the top face
+    int i;
+    for (i = 0; i < 20; i++) {
+        int newposition;
+        int position = this->getPosition(i);
+        switch (position) {
+            case 2 : newposition = 4;
+                     break;
+            case 3 : newposition = 17;
+                     break;
+            case 4 : newposition = 14;
+                     break;
+            case 8 : newposition = 2;
+                     break;
+            case 14: newposition = 8;
+                     break;
+            case 15: newposition = 16;
+                     break;
+            case 16: newposition = 3;
+                     break;
+            case 17: newposition = 15;
+                     break;
+            default: newposition = -1;
+                     break;
+        }
+        if (newposition != -1) {
+            this->setCubie(i, this->swapXZ(this->getCubie(i)));  //swap in situ
+            this->changePositionTo(i, newposition);
+        }
+    }
+};
 
 
 /**
@@ -247,24 +276,37 @@ void Rubik::turnFront() {
   */
 
 void Rubik::turnBack() {
-    //back up corners
-    unsigned char temp1 = this->right[2];
-
-    //turn corners
-    this->right[2] = this->swapXZ(this->left[0]);
-    this->left[0] = this->swapXZ(this->left[6]);
-    this->left[6] = this->swapXZ(this->right[4]);
-    this->right[4] = this->swapXZ(temp1);
-
-    //back up edges
-    temp1 = this->right[3];
-
-    //turn edges
-    this->right[3] = this->swapXZ(this->middle[3]);
-    this->middle[3] = this->swapXZ(this->left[7]);
-    this->left[7] = this->swapXZ(this->middle[2]);
-    this->middle[2] = this->swapXZ(temp1);
-}
+    //Look up for cubies that are in positions of the back face
+    int i;
+    for (i = 0; i < 20; i++) {
+        int newposition;
+        int position = this->getPosition(i);
+        switch (position) {
+            case 0 : newposition = 10;
+                     break;
+            case 6 : newposition = 0;
+                     break;
+            case 7 : newposition = 19;
+                     break;
+            case 10: newposition = 12;
+                     break;
+            case 11: newposition = 18;
+                     break;
+            case 12: newposition = 6;
+                     break;
+            case 18: newposition = 7;
+                     break;
+            case 19: newposition = 11;
+                     break;
+            default: newposition = -1;  //This cubie isnt in position
+                     break;
+        }
+        if (newposition != -1) {
+            this->setCubie(i, this->swapXZ(this->getCubie(i))); //swap in situ
+            this->changePositionTo(i, newposition);
+        }
+    }
+};
 
 
 /**
@@ -273,7 +315,7 @@ void Rubik::turnBack() {
   *
   * @section Description
   * The cube is correctly solved when:
-  *         Cubie             ID         Orientation
+  *         Cubie          Position        Orientation
   *     this->left[0]       00000            001             
   *     this->left[1]       00001            001             
   *     this->left[2]       00010            001
@@ -303,7 +345,7 @@ bool Rubik::isSolved() {
 
     for (i = 0; i < 20; i++) {
         //check positions
-        if (this->getId(i) != i) {
+        if (this->getPosition(i) != i) {
             return false;
         }
 
@@ -364,11 +406,11 @@ list<Rubik> Rubik::getSucc() {
 
 /**
   * Gets last 5 bits from i-th cubie 
-  * @param 'byte': unsigned char that represents identification and orientation
-  * @return identification
+  * @param 'i': i-th cubie
+  * @return position 
   */
 
-unsigned int Rubik::getId(int i) {
+unsigned int Rubik::getPosition(int i) {
     unsigned char cubie = this->getCubie(i);
     return (int) (cubie >> 3);
 }
@@ -376,7 +418,7 @@ unsigned int Rubik::getId(int i) {
 
 /**
   * Gets last 5 bits from i-th cubie 
-  * @param 'byte': unsigned char that represents identification and orientation
+  * @param 'i': i-th cubie
   * @return orientation 
   */
 
@@ -388,8 +430,8 @@ unsigned int Rubik::getOrientation(int i) {
 
 /**
   * Swaps X and Y axis
-  * @param 'byte': unsigned char that represents identification and orientation
-  * @return new byte with same identification but different orientation
+  * @param 'byte': unsigned char that represents position and orientation
+  * @return new byte with same position but different orientation
   */
 
 unsigned char Rubik::swapXY(unsigned char byte) {
@@ -406,8 +448,8 @@ unsigned char Rubik::swapXY(unsigned char byte) {
 
 /**
   * Swaps X and Z axis
-  * @param 'byte': unsigned char that represents identification and orientation
-  * @return new byte with same identification but different orientation
+  * @param 'byte': unsigned char that represents position and orientation
+  * @return new byte with same position but different orientation
   */
 
 unsigned char Rubik::swapXZ(unsigned char byte) {
@@ -424,8 +466,8 @@ unsigned char Rubik::swapXZ(unsigned char byte) {
 
 /**
   * Swaps Y and Z axis
-  * @param 'byte': unsigned char that represents identification and orientation
-  * @return new byte with same identification but different orientation
+  * @param 'byte': unsigned char that represents position and orientation
+  * @return new byte with same position but different orientation
   */
 
 unsigned char Rubik::swapYZ(unsigned char byte) {

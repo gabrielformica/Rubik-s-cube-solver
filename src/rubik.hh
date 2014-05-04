@@ -40,9 +40,10 @@ class Rubik {
         void turnBack();
         bool isSolved();
         std::list<Rubik> getSucc();
-        unsigned int getId(int);
+        unsigned int getPosition(int);
         unsigned int getOrientation(int);
     private:
+        void changePositionTo(int,int);
         unsigned char swapXY(unsigned char);
         unsigned char swapXZ(unsigned char);
         unsigned char swapYZ(unsigned char);
