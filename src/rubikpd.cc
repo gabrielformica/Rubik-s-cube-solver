@@ -58,8 +58,7 @@ int Rubikpd::getCCost(int i) {
 
 void Rubikpd::initializeAll() {
     this->initializeCorners();
-    this->initializeEdge(1);    //edges1
-    this->initializeEdge(2);    //edges2
+    this->initializeEdges();    //edges2
 };
 
 
@@ -104,40 +103,65 @@ void Rubikpd::initializeCorners() {
 
 /**
   * Initializes pattern database of edge permutations 
-  * @param 'table' : array 'edges' to be initialized (can be 1 or 2)
   */
 
-void Rubikpd::initializeEdge(int table) {
-    int *edges[2] = {this->edges1, this->edges2};
-    int t = table-1; //which element in the array 'edges' is
-
-    //initialize every cost in -1
+void Rubikpd::initializeEdges() {
+    //Default values
     int i;
-    for (i = 0; i < 42577920; i++)
-        edges[t][i] = -1;
+    for (i = 0; i < 42577920; i++) {
+        this->edges1[i] = -1;
+        this->edges2[i] = -1;
+    }
 
     Rubik goalcube;
     goalcube.transformToGoal();
-    int goal = this->rankEIDs(table, goalcube);
+    int goal2 = this->rankE(2, goalcube);
+    int goal1 = this->rankE(1, goalcube);
 
-    list<int> open;     //open queue
-    open.push_back(goal);
+    list<int *> open;     //open queue for edges1
+    int goals[2] = {goal1, goal2};
+    open.push_back(goals);
 
     while (!open.empty()) {
-        int parent = open.front(); //top
-        open.pop_front();          //pop
+        int parents[2] = {open.front()[0], open.front()[1]};   //top
+        open.pop_front();                                      //pop
 
-        Rubik cube = this->unrankE(table, parent);
+        int parent1 = parents[0];
+        int parent2 = parents[1];
+
+        //Get cube
+        Rubik cube1 = this->unrankE(1, parents[0]);
+        Rubik cube2 = this->unrankE(2, parents[1]);
+        Rubik cube;
+        int i;
+        for (i = 0; i < 8; i++)
+            cube.setCubie(i,cube1.getCubie(i));
+
+        for (i = 8; i < 16; i++)
+            cube.setCubie(i,cube2.getCubie(i));
+
+        cube.setCubie(16,cube1.getCubie(16));
+        cube.setCubie(17,cube1.getCubie(17));
+        cube.setCubie(18,cube2.getCubie(18));
+        cube.setCubie(19,cube2.getCubie(19));
+
         list<Rubik> s = cube.getSucc();  //successors
 
         for (list<Rubik>::iterator it = s.begin(); it != s.end(); it++) {
-            int child = this->rankE(table, *it);
+            int child1 = this->rankE(1, (*it));
+            int child2 = this->rankE(2, (*it));
 
-            if (edges[t][child] != -1)
+            if ((this->edges1[child1] != -1) && (this->edges2[child2] != -1))
                 continue;
             
-            edges[t][child] = edges[t][parent] + 1;
-            open.push_back(child);
+            if (this->edges1[child1] == -1)
+                this->edges1[child1] = this->edges1[parent1] + 1;
+
+            if (this->edges2[child2] == -1)
+                this->edges2[child2] = this->edges2[parent2] + 1;
+
+            int childs[2] = {child1, child2};
+            open.push_back(childs);
         }
     }
 };
@@ -342,7 +366,7 @@ int Rubikpd::rankEIDs(int table, Rubik cube) {
     }
 
     //Same goes for edges in middle face
-    int firstmiddle = 16 + 2*offset; 
+    int firstmiddle = 16 + (offset / 4); 
     k =  4;
     for (i = firstmiddle; i <= firstmiddle + 1; i++) {
         int id = cube.getId(i);
@@ -350,7 +374,7 @@ int Rubikpd::rankEIDs(int table, Rubik cube) {
         if (id > 16) {
             elem = id - 8;
         }
-        edgesid[k] = elem / 2;
+        edgesid[k] = elem;
         k++;
     }
 
@@ -376,7 +400,7 @@ void Rubikpd::auxiliaryRankEIDs(int *edgesid, int *set, int *inverse) {
     for (i = 0; i < 12; i++)
         appear[i] = 0;
 
-    for (i = 0; i < 12; i++)
+    for (i = 0; i < 6; i++)
         appear[edgesid[i]] = 1;
 
     //Edgesid elements are the last K-elements 
@@ -420,7 +444,7 @@ int Rubikpd::rankEO(int table, Rubik cube) {
 
     //Middle face
     for (i = 0; i < 2; i++) {
-        if (cube.getOrientation(16 + i + 2*offset) == 2)
+        if (cube.getOrientation(16 + i + (offset / 4)) == 2)
             rank = rank + 1;
         rank = rank * 2;
     }
@@ -474,7 +498,7 @@ Rubik Rubikpd::unrankEIDs(int table, int x) {
     int k = 0;
     int i;
     for (i = 6; i < 10; i++) {
-        unsigned char cubie = identity[i]*2;
+        unsigned char cubie = identity[i]*2 + 1;
         if (identity[i] > 8) {
             cubie = identity[i] + 8;  
         }
@@ -483,10 +507,10 @@ Rubik Rubikpd::unrankEIDs(int table, int x) {
         k++;
     }
     
-    int middle = 16 + 2*offset;
+    int middle = 16 + (offset / 4);
     k = 4;
     for (i = 10; i < 12; i++) {
-        unsigned char cubie = identity[i]*2;
+        unsigned char cubie = identity[i]*2 + 1;
         if (identity[i] > 8)
             cubie = identity[i] + 8;
 

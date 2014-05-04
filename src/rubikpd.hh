@@ -46,7 +46,7 @@ class Rubikpd {
         void initializeAll();
     private:
         void initializeCorners();
-        void initializeEdge(int);
+        void initializeEdges();
 
         //Methods to rank permutation of corners cubies
         int rankC(Rubik);      
