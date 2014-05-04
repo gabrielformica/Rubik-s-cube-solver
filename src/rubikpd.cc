@@ -118,6 +118,9 @@ void Rubikpd::initializeEdges() {
     int goal1 = this->rankE(1, goalcube);
     int goal2 = this->rankE(2, goalcube);
 
+    this->edges1[goal1] = 0;
+    this->edges2[goal2] = 0;
+
     list<int *> open;     //open queue for edges1
     int goals[2] = {goal1, goal2};
     open.push_back(goals);
@@ -565,18 +568,19 @@ Rubik Rubikpd::unrankEO(int table, int x) {
         k = k + 2;
     }
 
+    //Last two cubies this->middle[x], this->middle[x+1]
     unsigned char cubie;
     int di = y / 2;
     y = y - (di*2);
     cubie = 1;
     if (di == 1)
-        cubie = 4;
+        cubie = 2;
 
     cube.setCubie(16 + (offset /4), cubie);
     di = y;
     cubie = 1;
     if (di == 1)
-        cubie = 4;
+        cubie = 2;
     
     cube.setCubie(17 + (offset /4), cubie);
     
