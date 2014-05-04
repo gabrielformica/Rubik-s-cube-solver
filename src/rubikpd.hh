@@ -46,28 +46,29 @@ class Rubikpd {
         void initializeAll();
     private:
         void initializeCorners();
-        void initializeEdges();
+        void initializeEdges1();
+        void initializeEdges2();
 
         //Methods to rank permutation of corners cubies
         int rankC(Rubik);      
-        int rankCIDs(Rubik);   //Auxiliary method to rankC
-        int rankCO(Rubik);     //Auxiliary method to rankC
+        int rankCornersP(Rubik);   //Auxiliary method to rankC
+        int rankCornersO(Rubik);     //Auxiliary method to rankC
 
         //Methods to unrank permutation of corners cubies
         Rubik unrankC(int);
-        Rubik unrankCIDs(int);     //Corner IDs
-        Rubik unrankCO(int);       //Corner Orientations
+        Rubik unrankCornersP(int);     //Corner IDs
+        Rubik unrankCornersO(int);       //Corner Orientations
 
         //Methods to rank permutation of edges cubies in edges1
         int rankE(int,Rubik);
-        int rankEIDs(int,Rubik);
-        void auxiliaryRankEIDs(int *,int *,int *);
-        int rankEO(int,Rubik);
+        int rankEdgesP(int,Rubik);
+        void auxiliaryRankEdgesP(int *,int *,int *);
+        int rankEdgesO(int,Rubik);
 
         //Methods to unrank permutation of edges cubies in edges1
         Rubik unrankE(int,int);
-        Rubik unrankEIDs(int,int);     //Edge IDs
-        Rubik unrankEO(int,int);       //Edge Orientations
+        Rubik unrankEdgesP(int,int);     //Edge IDs
+        Rubik unrankEdgesO(int,int);       //Edge Orientations
 };
 
 #endif

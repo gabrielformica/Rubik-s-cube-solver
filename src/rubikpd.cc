@@ -58,7 +58,7 @@ int Rubikpd::getCCost(int i) {
 
 void Rubikpd::initializeAll() {
     this->initializeCorners();
-    this->initializeEdges();    //edges2
+    this->initializeEdges1();  
 };
 
 
@@ -105,66 +105,41 @@ void Rubikpd::initializeCorners() {
   * Initializes pattern database of edge permutations 
   */
 
-void Rubikpd::initializeEdges() {
+void Rubikpd::initializeEdges1() {
     //Default values
     int i;
     for (i = 0; i < 42577920; i++) {
         this->edges1[i] = -1;
-        this->edges2[i] = -1;
     }
 
     Rubik goalcube;
     goalcube.transformToGoal();
-    int goal1 = this->rankE(1, goalcube);
-    int goal2 = this->rankE(2, goalcube);
+    int goal = this->rankE(1, goalcube);
 
-    this->edges1[goal1] = 0;
-    this->edges2[goal2] = 0;
+    this->edges1[goal] = 0;
 
-    list<int *> open;     //open queue for edges1
-    int goals[2] = {goal1, goal2};
-    open.push_back(goals);
+    list<int> open;     //open queue for edges1
+    open.push_back(goal);
 
     while (!open.empty()) {
-        int parents[2] = {open.front()[0], open.front()[1]};   //top
-        open.pop_front();                                      //pop
-
-        int parent1 = parents[0];
-        int parent2 = parents[1];
+        int parent = open.front();  //top
+        open.pop_front();           //pop
 
         //Get cube
-        Rubik cube1 = this->unrankE(1, parent1);
-        Rubik cube2 = this->unrankE(2, parent2);
-        Rubik cube;
-        int i;
-        for (i = 0; i < 8; i++)
-            cube.setCubie(i,cube1.getCubie(i));
-
-        for (i = 8; i < 16; i++)
-            cube.setCubie(i,cube2.getCubie(i));
-
-        cube.setCubie(16,cube1.getCubie(16));
-        cube.setCubie(17,cube1.getCubie(17));
-        cube.setCubie(18,cube2.getCubie(18));
-        cube.setCubie(19,cube2.getCubie(19));
+        Rubik cube = this->unrankE(1, parent);
 
         list<Rubik> s = cube.getSucc();  //successors
 
         for (list<Rubik>::iterator it = s.begin(); it != s.end(); it++) {
-            int child1 = this->rankE(1, (*it));
-            int child2 = this->rankE(2, (*it));
+            int child = this->rankE(1, (*it));
 
-            if ((this->edges1[child1] != -1) && (this->edges2[child2] != -1))
+            if ((this->edges1[child] != -1))
                 continue;
             
-            if (this->edges1[child1] == -1)
-                this->edges1[child1] = this->edges1[parent1] + 1;
+            if (this->edges1[child] == -1)
+                this->edges1[child] = this->edges1[parent] + 1;
 
-            if (this->edges2[child2] == -1)
-                this->edges2[child2] = this->edges2[parent2] + 1;
-
-            int childs[2] = {child1, child2};
-            open.push_back(childs);
+            open.push_back(child);
         }
     }
 };
@@ -177,30 +152,30 @@ void Rubikpd::initializeEdges() {
   */
 
 int Rubikpd::rankC(Rubik cube) {
-    int x = this->rankCIDs(cube);     //IDs permutation
-    int y = this->rankCO(cube);       //Orientations permutation
+    int x = this->rankCornersP(cube);     //Permutation of positions
+    int y = this->rankCornersO(cube);     //Permutation of orientations
 
     return x*(pow(3,8)) + y;
 };
 
 
 /**
-  * Ranks a Rubik's cube partly by taking only corner IDs
+  * Ranks a Rubik's cube partly by taking only corner positions 
   * It uses rankAux from utils.hh to rank a permutation of 
   * integers into an integer
   * @param 'cube' : Rubik's cube configuration
-  * @return IDs permutation (value between 0 and 40319)
+  * @return Permutation of the corner positions (value between 0 and 40319)
   */
 
-int Rubikpd::rankCIDs(Rubik cube) {
-    int cornersid[8];
-    int i;
+int Rubikpd::rankCornersP(Rubik cube) {
+    int positions[8];
     int k = 0;
     
     //Transforms a Rubik's cube into a permutation of corners
-    for(i = 0; i < 16; i++) {
+    int i;
+    for (i = 0; i < 16; i++) {
         if (i % 2 == 0) {
-            cornersid[k] = (cube.getId(i)) / 2;
+            positions[k] = (cube.getPosition(i)) / 2;
             k++;
         }
     }
@@ -208,9 +183,9 @@ int Rubikpd::rankCIDs(Rubik cube) {
     //Pre calculate inverse
     int inverse[8];
     for (i = 0; i < 8; i++)
-      inverse[cornersid[i]] = i;
+      inverse[positions[i]] = i;
 
-    return (rankAux(1, 8, cornersid, inverse));  //rank a sequence of integers
+    return (rankAux(1, 8, positions, inverse));  //rank a sequence of integers
 };
 
 
@@ -227,7 +202,7 @@ int Rubikpd::rankCIDs(Rubik cube) {
   * @return Orientation permutations (value between 0 and 6560)
   */
 
-int Rubikpd::rankCO(Rubik cube) {
+int Rubikpd::rankCornersO(Rubik cube) {
     int rank = 0;
     int i;
     
@@ -253,13 +228,14 @@ Rubik Rubikpd::unrankC(int p) {
     int t = 6561;    //3^8
     Rubik cube;  
     cube.clean();
-    Rubik IDs = this->unrankCIDs(p / t);
-    Rubik orientations = this->unrankCO(p % t);
+
+    Rubik positions = this->unrankCornersP(p / t);
+    Rubik orientations = this->unrankCornersO(p % t);
     
     int i;
     for (i = 0; i < 20; i++) {
         //Merge ID with orientation to get final cubie
-        unsigned char cubie = IDs.getCubie(i) | orientations.getCubie(i);
+        unsigned char cubie = positions.getCubie(i) | orientations.getCubie(i);
         cube.setCubie(i, cubie);
     }
 
@@ -268,15 +244,15 @@ Rubik Rubikpd::unrankC(int p) {
  
 
 /**
-  * Gets a Rubik's cube configuration without orientations (only IDs) 
+  * Gets a Rubik's cube configuration without orientations (only positions) 
   * It uses unrankAux from utils.hh to unrank an intenger into
   * a sequence of integers
   * from an integer value between 0 and 40319 (ranked ID permutation)
-  * @param 'x' : permutation of corner IDs represented as an int
+  * @param 'x' : permutation of corner positions represented as an int
   * @return Rubik's cube configuration
   */
 
-Rubik Rubikpd::unrankCIDs(int x) {
+Rubik Rubikpd::unrankCornersP(int x) {
     Rubik cube;
     cube.clean();
     int identity[8] = {0,1,2,3,4,5,6,7};
@@ -296,13 +272,13 @@ Rubik Rubikpd::unrankCIDs(int x) {
 
 
 /**
-  * Gets a Rubik's cube configuration without IDs (only orientations)
+  * Gets a Rubik's cube configuration without positions (only orientations)
   * from an integer value between 0 and 6560 (ranked orientation permutations)
   * @param 'x' : permutation of corner orientations represented as an integer
   * @return Rubik's cube configuration
   */
 
-Rubik Rubikpd::unrankCO(int x) {
+Rubik Rubikpd::unrankCornersO(int x) {
     Rubik cube;
     cube.clean();
     int y = x;
@@ -335,25 +311,25 @@ Rubik Rubikpd::unrankCO(int x) {
   */
 
 int Rubikpd::rankE(int table, Rubik cube) {
-    int x = this->rankEIDs(table, cube);     //IDs permutation
-    int y = this->rankEO(table, cube);       //Orientations permutation
+    int x = this->rankEdgesP(table, cube);     //Permutation of positions
+    int y = this->rankEdgesO(table, cube);     //Permutation of orientations
 
     return x*(pow(2,6)) + y;
 };
 
 
 /**
-  * Ranks a Rubik's cube partly by taking only six edges IDs
+  * Ranks a Rubik's cube partly by taking only the positions of six edges 
   * It uses rankAux from utils.hh to rank a permutation of 
   * integers into an integer
   *
   * @param 'table' : Table we are ranking (1 for edges1, or 2 for edges2)
   * @param 'cube'  : Rubik's cube configuration
-  * @return IDs permutation (value between 0 and 665.279)
+  * @return Permutation of positions (value between 0 and 665.279)
   */
 
-int Rubikpd::rankEIDs(int table, Rubik cube) {
-    int edgesid[6];
+int Rubikpd::rankEdgesP(int table, Rubik cube) {
+    int positions[6];
 
     //With table 2, first cubie is 8-th cubie 
     int offset = (table-1)*8;     
@@ -361,12 +337,12 @@ int Rubikpd::rankEIDs(int table, Rubik cube) {
     int k = 0;
     for (i = offset; i < 8 + offset; i++) {
         if (i % 2 != 0) {
-            int id = cube.getId(i);
-            int elem = id / 2;
-            if (id > 16) {
-                elem = id - 8;
+            int p = cube.getPosition(i);
+            int elem = p / 2;
+            if (p > 16) {
+                elem = p - 8;
             }
-            edgesid[k] = elem;
+            positions[k] = elem;
             k++;
         }
     }
@@ -375,17 +351,17 @@ int Rubikpd::rankEIDs(int table, Rubik cube) {
     int firstmiddle = 16 + (offset / 4); 
     k =  4;
     for (i = firstmiddle; i <= firstmiddle + 1; i++) {
-        int id = cube.getId(i);
-        int elem = id / 2;
-        if (id > 16) {
-            elem = id - 8;
+        int p = cube.getPosition(i);
+        int elem = p / 2;
+        if (p > 16) {
+            elem = p - 8;
         }
-        edgesid[k] = elem;
+        positions[k] = elem;
         k++;
     }
 
     int set[12], inverse[12];
-    this->auxiliaryRankEIDs(edgesid, set, inverse);
+    this->auxiliaryRankEdgesP(positions, set, inverse);
 
     return (rankAux(6, 12, set, inverse));  //rank a sequence of integers
 };
@@ -393,12 +369,12 @@ int Rubikpd::rankEIDs(int table, Rubik cube) {
 
 /**
   * Set the three elementes necessary to do k-permutations of an n-set
-  * @param 'edgesid'   :   K elements to be permuted
+  * @param 'positions' :   K elements to be permuted
   * @param 'set'       :   Array of integers to be ranked
   * @param 'inverse'   :   Invers of set
   */
 
-void Rubikpd::auxiliaryRankEIDs(int *edgesid, int *set, int *inverse) {
+void Rubikpd::auxiliaryRankEdgesP(int *positions, int *set, int *inverse) {
     int i, k;
     //Get subset
     int appear[12];
@@ -407,11 +383,11 @@ void Rubikpd::auxiliaryRankEIDs(int *edgesid, int *set, int *inverse) {
         appear[i] = 0;
 
     for (i = 0; i < 6; i++)
-        appear[edgesid[i]] = 1;
+        appear[positions[i]] = 1;
 
     //Edgesid elements are the last K-elements 
     for (i = 6; i < 12; i++)    
-        set[i] = edgesid[i % 6];
+        set[i] = positions[i % 6];
 
     k = 0;
     for (i = 0; i < 12; i++) {
@@ -433,10 +409,10 @@ void Rubikpd::auxiliaryRankEIDs(int *edgesid, int *set, int *inverse) {
   * @section Description
   * Edge cubies have only two possible directions in a certain position
   * @param 'cube' : Rubik's cube configuration
-  * @return IDs permutation (value between 0 and 63)
+  * @return Permutation of orientations (value between 0 and 63)
   */
 
-int Rubikpd::rankEO(int table, Rubik cube) {
+int Rubikpd::rankEdgesO(int table, Rubik cube) {
     int offset = (table-1)*8;
     int rank = 0;
 
@@ -471,13 +447,14 @@ Rubik Rubikpd::unrankE(int table, int p) {
     int t = 64;   //2^6
     Rubik cube;
     cube.clean();
-    Rubik IDs = this->unrankEIDs(table, p / t);
-    Rubik orientations = this->unrankEO(table, p % t);
+
+    Rubik positions = this->unrankEdgesP(table, p / t);
+    Rubik orientations = this->unrankEdgesO(table, p % t);
 
     int i;
     for (i = 0; i < 20; i++) {
         //Merge ID with orientation to get final cubie
-        unsigned char cubie = IDs.getCubie(i) | orientations.getCubie(i);
+        unsigned char cubie = positions.getCubie(i) | orientations.getCubie(i);
         cube.setCubie(i, cubie);
     }
 
@@ -486,15 +463,16 @@ Rubik Rubikpd::unrankE(int table, int p) {
 
 
 /**
-  * Gets a Rubik's cube configuration without orientations (only IDs) 
+  * Gets a Rubik's cube configuration without orientations (only position) 
   * It uses unrankAux from utils.hh to unrank an intenger into
   * a sequence of integers
-  * from an integer value between 0 and 665.279 (ranked ID permutation)
-  * @param 'x' : permutation of corner IDs represented as an int
+  * from an integer value between 0 and 665.279 (ranked permutation
+  * of positions)
+  * @param 'x' : permutation of corner positions represented as an int
   * @return Rubik's cube configuration
   */
 
-Rubik Rubikpd::unrankEIDs(int table, int x) {
+Rubik Rubikpd::unrankEdgesP(int table, int x) {
     Rubik cube;
     cube.clean();
     
@@ -532,13 +510,13 @@ Rubik Rubikpd::unrankEIDs(int table, int x) {
 
 
 /**
-  * Gets a Rubik's cube configuration without IDs (only orientations)
+  * Gets a Rubik's cube configuration without positions (only orientations)
   * from an integer value between 0 and 63 (ranked orientation permutations)
   * @param 'x' : permutation of corner orientations represented as an integer
   * @return Rubik's cube configuration
   */
 
-Rubik Rubikpd::unrankEO(int table, int x) {
+Rubik Rubikpd::unrankEdgesO(int table, int x) {
     Rubik cube;
     cube.clean();
     int i;
