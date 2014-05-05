@@ -29,6 +29,7 @@ class Rubik {
     public:
         void clean();
         void transformToGoal();
+        void random();
         Rubik clone();
         void setCubie(int,unsigned char);
         unsigned char getCubie(int);

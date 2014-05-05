@@ -9,6 +9,8 @@
   */
 
 
+#include <time.h>
+#include <stdlib.h>
 #include <string>
 #include <list>
 #include "rubik.hh"
@@ -49,6 +51,41 @@ void Rubik::transformToGoal() {
         position = position << 3;     //now position is in the right place
         unsigned char orientation = '\x01';
         this->setCubie(i, position | orientation);
+    }
+};
+
+
+/**
+  * Generates random Rubik's cube configuration
+  */
+
+void Rubik::random() {
+    this->clean();
+    this->transformToGoal();
+    int moves = 50;
+
+    int i;
+    for (i = 0; i < moves; i++) {
+        srand(time(NULL));
+        int face = (rand() % 6) + 1;
+        int degrees = (rand() % 3) + 1;
+        int j;
+        for (j = 0; j < degrees; j++) {
+            switch (face) {
+                case 1 : this->turnLeft();
+                         break;
+                case 2 : this->turnRight();
+                         break;
+                case 3 : this->turnTop();
+                         break;
+                case 4 : this->turnBottom();
+                         break;
+                case 5 : this->turnFront();
+                         break;
+                case 6 : this->turnBack();
+                         break;
+            }
+        }
     }
 };
 

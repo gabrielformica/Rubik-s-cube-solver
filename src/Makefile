@@ -11,7 +11,7 @@ main: $(OBJSM)
 rubikpd: $(OBJSRPD)
 	$(CC) $(OBJSRPD) -o rubikpd
 
-main.o: rubik.hh rubikpd.hh idastar.hh 
+main.o: rubik.hh rubikpd.hh
 	$(CC) $(CFLAGS) main.cc
 
 rubik.o: rubik.hh 
@@ -25,9 +25,6 @@ rubikpd.o: rubikpd.hh utils.hh rubik.hh
 
 utils.o: utils.hh 
 	$(CC) $(CFLAGS) utils.cc 
-
-idastar.o: idastar.hh rubik.hh rubiknode.hh rubikpd.hh
-	$(CC) $(CFLAGS) idastar.cc
 
 clean:
 	rm -f main rubikpd *.o
