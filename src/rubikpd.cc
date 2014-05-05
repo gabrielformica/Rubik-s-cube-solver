@@ -9,6 +9,7 @@
   */
 
 #include <list>
+#include <stdio.h>
 #include "rubikpd.hh"
 #include "utils.hh"
 
@@ -49,6 +50,67 @@ int Rubikpd::heuristic(Rubik cube) {
 
 int Rubikpd::getCCost(int i) {
     return this->corners[i];   
+};
+
+
+/**
+  * Initializes corners, edges1, and edges2 by reading binary files
+  * @param 'c' :  file pointer to binary file of corners 
+  * @param 'e1'  :  file pointer to binary file of edges1
+  * @param 'e2'  :  file pointer to binary file of edges2
+  */
+
+void Rubikpd::initializeAllWithFiles() {
+    this->initializeCornersWithFile();
+    this->initializeEdgesWithFile(1);
+    this->initializeEdgesWithFile(2);
+};
+
+
+/**
+  * Initializes corners by reading corners.bin (binary file)
+  */
+
+void Rubikpd::initializeCornersWithFile() {
+    FILE *fp;
+    fp = fopen("corners.bin", "rb");
+
+    int i;
+    for (i = 0; i < 264539520; i++) {
+        int x;
+        fread(&x, sizeof(int), 1, fp);
+        this->corners[i] = x;
+    }
+
+    fclose(fp);
+};
+
+
+/**
+  * Initializes one array of edges by reading edges1.bin 
+  * if table = 1, or edges2.bin if table == 2 
+  * @param 'table' : 1 for edges1, 2 for edges2
+  */
+
+void Rubikpd::initializeEdgesWithFile(int table) {
+    int *edges[2] = {this->edges1, this->edges2}; 
+    int t = table - 1;  //index of edges
+
+    FILE *fp;
+    if (table == 1) 
+        fp = fopen("edges1.bin", "rb");
+    else 
+        fp = fopen("edges2.bin", "rb");
+
+
+    int i;
+    for (i = 0; i < 264539520; i++) {
+        int x;
+        fread(&x, sizeof(int), 1, fp);
+        edges[t][i] = x;
+    }
+
+    fclose(fp);
 };
 
 
@@ -97,8 +159,19 @@ void Rubikpd::initializeCorners() {
             this->corners[child] = this->corners[parent] + 1;
             open.push_back(child);
         }
-
     }
+
+    //Printing to binary file corners.bin
+    FILE *fp;
+    fp = fopen("corners.bin","wb");
+
+    for (i = 0; i < 264539520; i++) {
+        int x = this->corners[i];
+        fwrite(&x, sizeof(int), 1, fp);
+    }
+
+    fclose(fp); 
+
 };
 
 
@@ -147,6 +220,20 @@ void Rubikpd::initializeEdges(int table) {
             open.push_back(child);
         }
     }
+
+    //Printing to binary file edges1.bin or edges2.bin
+    FILE *fp;
+    if (table == 1) 
+        fp = fopen("edges1.bin","wb");
+    else
+        fp = fopen("edges2.bin","wb");
+
+    for (i = 0; i < 42577920; i++) {
+        int x = edges[t][i];
+        fwrite(&x, sizeof(int), 1, fp);
+    }
+
+    fclose(fp); 
 };
 
 

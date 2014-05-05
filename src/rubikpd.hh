@@ -11,6 +11,7 @@
 #ifndef RUBIKPD_HH
 #define RUBIKPD_HH
 
+#include <stdio.h>
 #include "rubik.hh"
 
 /*
@@ -44,9 +45,12 @@ class Rubikpd {
         int heuristic(Rubik);
         int getCCost(int);       //corners cost
         void initializeAll();
+        void initializeAllWithFiles();
     private:
         void initializeCorners();
         void initializeEdges(int);
+        void initializeCornersWithFile();
+        void initializeEdgesWithFile(int);
 
         //Methods to rank permutation of corners cubies
         int rankC(Rubik);      
