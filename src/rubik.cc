@@ -10,6 +10,7 @@
 
 
 #include <time.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string>
 #include <list>
@@ -26,6 +27,41 @@ void Rubik::clean() {
     int i;
     for (i = 0; i < 20; i++)
         this->setCubie(i,'\x00');
+};
+
+
+/**
+  * Print This Rubik's cube configuration
+  */
+
+void Rubik::print() {
+    int i;
+    printf("                     position          orientation\n");
+    for (i = 0; i < 8; i++) {
+        int position = this->getPosition(i);
+        int orientation = this->getOrientation(i);
+        printf("     Left[%d]   =         %d                   %d\n",
+               i, position, orientation);
+    }
+    printf("\n");
+
+    for (i = 8; i < 15; i++) {
+        int position = this->getPosition(i);
+        int orientation = this->getOrientation(i);
+        printf("     Right[%d]   =        %d                   %d\n",
+                i % 8, position, orientation);
+    }
+
+    printf("\n");
+
+    for (i = 16; i < 20; i++) {
+        int position = this->getPosition(i);
+        int orientation = this->getOrientation(i);
+        printf("     Middle[%d]   =       %d                   %d\n", 
+               i % 8, position, orientation);
+    }
+
+    printf("\n");
 };
 
 
@@ -65,9 +101,12 @@ void Rubik::random() {
     int moves = 50;
 
     int i;
+    srand(time(NULL));
+    int face = (rand() % 6) + 1;
     for (i = 0; i < moves; i++) {
-        srand(time(NULL));
-        int face = (rand() % 6) + 1;
+        int random = rand();
+        srand(random);
+        face = (rand() % 6) + 1;
         int degrees = (rand() % 3) + 1;
         int j;
         for (j = 0; j < degrees; j++) {

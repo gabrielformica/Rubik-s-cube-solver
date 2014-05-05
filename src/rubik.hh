@@ -28,6 +28,7 @@ class Rubik {
 
     public:
         void clean();
+        void print();
         void transformToGoal();
         void random();
         Rubik clone();
