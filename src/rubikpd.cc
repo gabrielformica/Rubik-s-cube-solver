@@ -58,7 +58,8 @@ int Rubikpd::getCCost(int i) {
 
 void Rubikpd::initializeAll() {
     this->initializeCorners();
-    this->initializeEdges1();  
+    this->initializeEdges(1);  //edges1  
+    this->initializeEdges(2);  //edges2
 };
 
 
@@ -103,20 +104,24 @@ void Rubikpd::initializeCorners() {
 
 /**
   * Initializes pattern database of edge permutations 
+  * @param 'table' : 1 for edges1, 2 for edges2
   */
 
-void Rubikpd::initializeEdges1() {
+void Rubikpd::initializeEdges(int table) {
+    int *edges[2] = {this->edges1, this->edges2}; 
+    int t = table - 1;  //index of edges
+
     //Default values
     int i;
     for (i = 0; i < 42577920; i++) {
-        this->edges1[i] = -1;
+        edges[t][i] = -1;
     }
 
     Rubik goalcube;
     goalcube.transformToGoal();
-    int goal = this->rankE(1, goalcube);
+    int goal = this->rankE(table, goalcube);
 
-    this->edges1[goal] = 0;
+    edges[t][goal] = 0;
 
     list<int> open;     //open queue for edges1
     open.push_back(goal);
@@ -126,18 +131,18 @@ void Rubikpd::initializeEdges1() {
         open.pop_front();           //pop
 
         //Get cube
-        Rubik cube = this->unrankE(1, parent);
+        Rubik cube = this->unrankE(table, parent);
 
         list<Rubik> s = cube.getSucc();  //successors
 
         for (list<Rubik>::iterator it = s.begin(); it != s.end(); it++) {
-            int child = this->rankE(1, (*it));
+            int child = this->rankE(table, (*it));
 
-            if ((this->edges1[child] != -1))
+            if ((edges[t][child] != -1))
                 continue;
             
-            if (this->edges1[child] == -1)
-                this->edges1[child] = this->edges1[parent] + 1;
+            if (edges[t][child] == -1)
+                edges[t][child] = edges[t][parent] + 1;
 
             open.push_back(child);
         }
