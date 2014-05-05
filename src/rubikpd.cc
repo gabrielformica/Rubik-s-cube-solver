@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "rubikpd.hh"
 #include "utils.hh"
+#include "rubik.hh"
 
 using namespace std;
 
@@ -104,7 +105,7 @@ void Rubikpd::initializeEdgesWithFile(int table) {
 
 
     int i;
-    for (i = 0; i < 264539520; i++) {
+    for (i = 0; i < 42577920; i++) {
         int x;
         fread(&x, sizeof(int), 1, fp);
         edges[t][i] = x;
