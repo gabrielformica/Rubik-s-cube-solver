@@ -14,9 +14,12 @@
 
 using namespace std;
 
-
 /**
-  * Class constructor
+  * Make a node
+  * @param 'sate'  : Rubik's cube
+  * @param 'parent': Pointer to RubikNode that represents the parent
+  * @param 'action': Move maded by the parent 
+  * @param 'cost'  : Cost of the root node to this node
   */
 
 void RubikNode::makeNode(Rubik state, RubikNode *parent,
@@ -31,12 +34,12 @@ void RubikNode::makeNode(Rubik state, RubikNode *parent,
 
 /**
   * Initializes root node
-  * @param 'state' : Rubik pointer that represents Rubik's cube 
-  * @return root RubikNode
+  * @param 'state' : Rubik's cube 
+  * @return Root RubikNode
   */
 
 void RubikNode::makeRootNode(Rubik state) {
-    this->makeNode(state, NULL, '\x00',0);
+    this->makeNode(state, NULL, '\x00', 0);
 };
 
 
@@ -58,23 +61,41 @@ bool RubikNode::isGoal() {
   * generateChildren only generates good children.
   * It takes in count the action of the current Rubik node, reducing 
   * repeated nodes generation
+  *
+  * Actions are as follow:
+  *    A  -> 90 degrees left face 
+  *    B  -> 180 degrees left face
+  *    C  -> -90 degrees  left face
+  *    .
+  *    .
+  *    .
+  *    P  -> 90 degrees back face
+  *    Q  -> 180 degrees back face
+  *    R  -> -90 degrees back face
   */
 
 void RubikNode::generateChildren() {
-    //Left, Right, Top, Bottom, Front, Back
-    char faces[6] = {'L', 'R', 'T', 'B', 'F', 'Z'};
+    //Left: ABC, Right: DEF, Top:GHI, Bottom:JKL, Front:MNO, Back:PQR
+    char moves[18] = {
+                'A', 'B', 'C',   //Moves for left face
+                'D', 'E', 'F',   //Moves for right face
+                'G', 'H', 'I',   //Moves for top face
+                'J', 'K', 'L',   //Moves for bottom face
+                'M', 'N', 'O',   //Moves for front face
+                'P', 'Q', 'R',   //Moves for back face
+    };
 
-    int excl1 = -1;     //face to be excluded in faces array
-    int excl2 = -1;     //face to be excluded in faces array
+    int excl1 = -1;     //Used for excluding moves
+    int excl2 = -1;     //Used for excluding moves
 
     switch (this->action) {
-        case '\x00': break;                           //root node case
-        case 'L':    excl1 = 0; excl2 = 0; break;     //action is left
-        case 'R':    excl1 = 0; excl2 = 1; break;     //action is right
-        case 'T':    excl1 = 2; excl2 = 2; break;     //action is top
-        case 'B':    excl1 = 2; excl2 = 3; break;     //action is bottom
-        case 'F':    excl1 = 4; excl2 = 4; break;     //action is front
-        case 'Z':    excl1 = 4; excl2 = 5; break;     //action is back
+        case '\x00': break;    //root node case
+        case 'A': case 'B': case 'C':  excl1 = 0; excl2 = 0; break;     
+        case 'D': case 'E': case 'F':  excl1 = 0; excl2 = 1; break;  
+        case 'G': case 'H': case 'I':  excl1 = 2; excl2 = 2; break; 
+        case 'J': case 'K': case 'L':  excl1 = 2; excl2 = 3; break;
+        case 'M': case 'N': case 'O':  excl1 = 4; excl2 = 4; break;  
+        case 'P': case 'Q': case 'R':  excl1 = 4; excl2 = 5; break; 
     };
 
     list<Rubik> succ = this->state.getSucc();      //successors of cube
@@ -87,7 +108,7 @@ void RubikNode::generateChildren() {
             continue;
         }
         RubikNode node;
-        node.makeNode((*it), this, faces[i / 3], this->cost + 1);
+        node.makeNode((*it), this, moves[i], this->cost + 1);
         children.push_back(node);
         i++;
     }
