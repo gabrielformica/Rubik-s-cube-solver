@@ -124,7 +124,7 @@ void Rubikpd::initializeCorners() {
     //initialize every cost in 255 
     int i;
     for (i = 0; i < 264539520; i++) 
-        this->corners[i] = '\xFF';  
+        this->corners[i] = '\xFF';  //255
 
     Rubik goalcube;
     goalcube.transformToGoal();
@@ -145,7 +145,7 @@ void Rubikpd::initializeCorners() {
             int child = this->rankC(*it);
 
             //Already closed or in open queue
-            if (this->corners[child] != '\xFF')  
+            if (this->corners[child] != 255)  
                 continue;
             
             this->corners[child] = this->corners[parent] + 1;
@@ -179,7 +179,7 @@ void Rubikpd::initializeEdges(int table) {
     //Default values
     int i;
     for (i = 0; i < 42577920; i++) {
-        edges[t][i] = '\xFF';   
+        edges[t][i] = '\xFF';   //255
     }
 
     Rubik goalcube;
@@ -204,7 +204,7 @@ void Rubikpd::initializeEdges(int table) {
             int child = this->rankE(table, (*it));
 
             //Already close or in open queue
-            if (edges[t][child] != '\xFF')
+            if (edges[t][child] != 255)
                 continue;
             
             edges[t][child] = edges[t][parent] + 1;
