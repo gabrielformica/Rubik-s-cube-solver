@@ -45,7 +45,7 @@ void Rubik::print() {
     }
     printf("\n");
 
-    for (i = 8; i < 15; i++) {
+    for (i = 8; i < 16; i++) {
         int position = this->getPosition(i);
         int orientation = this->getOrientation(i);
         printf("     Right[%d]   =        %d                   %d\n",
