@@ -43,16 +43,6 @@ int Rubikpd::heuristic(Rubik cube) {
 
 };
 
-/**
-  * Gets cost of element 'i' in 'corners' array
-  * @param 'i' : subindex
-  * @return corners[i]
-  */
-
-int Rubikpd::getCCost(int i) {
-    return this->corners[i];   
-};
-
 
 /**
   * Initializes corners, edges1, and edges2 by reading binary files
@@ -94,7 +84,7 @@ void Rubikpd::initializeCornersWithFile() {
   */
 
 void Rubikpd::initializeEdgesWithFile(int table) {
-    int *edges[2] = {this->edges1, this->edges2}; 
+    unsigned char *edges[2] = {this->edges1, this->edges2}; 
     int t = table - 1;  //index of edges
 
     FILE *fp;
@@ -131,10 +121,10 @@ void Rubikpd::initializeAll() {
   */
 
 void Rubikpd::initializeCorners() {
-    //initialize every cost in -1
+    //initialize every cost in 255 
     int i;
     for (i = 0; i < 264539520; i++) 
-        this->corners[i] = -1;
+        this->corners[i] = '\xFF';  
 
     Rubik goalcube;
     goalcube.transformToGoal();
@@ -154,7 +144,8 @@ void Rubikpd::initializeCorners() {
         for (list<Rubik>::iterator it = s.begin(); it != s.end(); it++) {
             int child = this->rankC(*it);
 
-            if (this->corners[child] != -1)   //Already closed or in open queue
+            //Already closed or in open queue
+            if (this->corners[child] != '\xFF')  
                 continue;
             
             this->corners[child] = this->corners[parent] + 1;
@@ -182,13 +173,13 @@ void Rubikpd::initializeCorners() {
   */
 
 void Rubikpd::initializeEdges(int table) {
-    int *edges[2] = {this->edges1, this->edges2}; 
+    unsigned char *edges[2] = {this->edges1, this->edges2}; 
     int t = table - 1;  //index of edges
 
     //Default values
     int i;
     for (i = 0; i < 42577920; i++) {
-        edges[t][i] = -1;
+        edges[t][i] = '\xFF';   
     }
 
     Rubik goalcube;
@@ -212,11 +203,11 @@ void Rubikpd::initializeEdges(int table) {
         for (list<Rubik>::iterator it = s.begin(); it != s.end(); it++) {
             int child = this->rankE(table, (*it));
 
-            if ((edges[t][child] != -1))
+            //Already close or in open queue
+            if (edges[t][child] != '\xFF')
                 continue;
             
-            if (edges[t][child] == -1)
-                edges[t][child] = edges[t][parent] + 1;
+            edges[t][child] = edges[t][parent] + 1;
 
             open.push_back(child);
         }
