@@ -63,6 +63,7 @@ void Rubikpd::initializeAllWithFiles() {
   */
 
 void Rubikpd::initializeCornersWithFile() {
+    printf("----Initializing corners\n");
     FILE *fp;
     fp = fopen("corners.bin", "rb");
 
@@ -84,6 +85,7 @@ void Rubikpd::initializeCornersWithFile() {
   */
 
 void Rubikpd::initializeEdgesWithFile(int table) {
+    printf("----Initializing edges%d\n",table);
     unsigned char *edges[2] = {this->edges1, this->edges2}; 
     int t = table - 1;  //index of edges
 

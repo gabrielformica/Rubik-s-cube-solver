@@ -34,6 +34,7 @@ class Rubik {
         Rubik clone();
         void setCubie(int,unsigned char);
         unsigned char getCubie(int);
+        void turn(int,int);
         void turnLeft();
         void turnRight();
         void turnTop();

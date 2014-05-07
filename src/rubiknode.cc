@@ -74,7 +74,7 @@ bool RubikNode::isGoal() {
   *    R  -> -90 degrees back face
   */
 
-void RubikNode::generateChildren() {
+list<RubikNode> RubikNode::generateChildren() {
     //Left: ABC, Right: DEF, Top:GHI, Bottom:JKL, Front:MNO, Back:PQR
     char moves[18] = {
                 'A', 'B', 'C',   //Moves for left face
@@ -99,7 +99,7 @@ void RubikNode::generateChildren() {
     };
 
     list<Rubik> succ = this->state.getSucc();      //successors of cube
-    list<RubikNode> children;                       //children of this node
+    list<RubikNode> children;                      //children of this node
 
     int i = 0;
     for (list<Rubik>::iterator it = succ.begin(); it != succ.end(); it++) {
@@ -113,7 +113,71 @@ void RubikNode::generateChildren() {
         i++;
     }
 
-    this->children = children;
+    return children;
+};
+
+
+/**
+  * Gets i-th child
+  * @param 'i'  :  valid i-th child
+  * @return A valid child
+  */
+
+RubikNode RubikNode::getChild(int child) {
+    //Left: ABC, Right: DEF, Top:GHI, Bottom:JKL, Front:MNO, Back:PQR
+    char moves[18] = {
+                'A', 'B', 'C',   //Moves for left face
+                'D', 'E', 'F',   //Moves for right face
+                'G', 'H', 'I',   //Moves for top face
+                'J', 'K', 'L',   //Moves for bottom face
+                'M', 'N', 'O',   //Moves for front face
+                'P', 'Q', 'R',   //Moves for back face
+    };
+
+    int excl1 = -1;     //Used for excluding moves
+    int excl2 = -1;     //Used for excluding moves
+
+    switch (this->action) {
+        case '\x00': break;    //root node case
+        case 'A': case 'B': case 'C':  excl1 = 0; excl2 = 0; break;     
+        case 'D': case 'E': case 'F':  excl1 = 0; excl2 = 1; break;  
+        case 'G': case 'H': case 'I':  excl1 = 2; excl2 = 2; break; 
+        case 'J': case 'K': case 'L':  excl1 = 2; excl2 = 3; break;
+        case 'M': case 'N': case 'O':  excl1 = 4; excl2 = 4; break;  
+        case 'P': case 'Q': case 'R':  excl1 = 4; excl2 = 5; break; 
+    };
+
+    int j;
+    int i = -1;
+    //Get what is the i-th child to this node!
+    for (j = 0; j < 18 && i < child; j++) {
+        if ((j/ 3) == excl1 || (j / 3) == excl2) {
+            continue;
+        }
+        i++;
+    }
+
+    j--;   //Because the the move would be when i == child
+    int face = j / 3;
+    int times = (j % 3) + 1;  
+
+    Rubik cube = this->state.clone();
+    cube.turn(face, times);
+
+    RubikNode node;
+    node.makeNode(cube, this, moves[j], this->cost + 1);
+
+    return node;
+};
+
+
+/**
+  * Gets the number of valids children of this node
+  * @return The number of children
+  */
+
+int RubikNode::numberOfChildren() {
+    return this->generateChildren().size();
 };
 
 

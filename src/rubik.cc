@@ -186,7 +186,7 @@ unsigned char Rubik::getCubie(int i) {
 
 
 /**
-  *
+  * Change position i i-th cubie to 'position'
   */
 
 void Rubik::changePositionTo(int i, int position) {
@@ -198,6 +198,29 @@ void Rubik::changePositionTo(int i, int position) {
     this->setCubie(i, cubie);
 };
 
+
+/**
+  * Turns the face 'times' times
+  * @param 'face'    :     face to be moved
+  * @param 'times'   :     times the face is gonna be moved (1,2,3)
+  */
+
+void Rubik::turn(int face, int times) {
+    //Moves that can be maded
+    void (Rubik::*moves[6]) () = {
+      &Rubik::turnLeft,     
+      &Rubik::turnRight, 
+      &Rubik::turnTop,  
+      &Rubik::turnBottom,
+      &Rubik::turnFront,
+      &Rubik::turnBack,
+    };
+
+    int i;
+    for (i = 0; i < times; i++)
+        (this->*moves[face])();
+
+}
 
 /**
   * Turns 90 degrees the left face clockwise

@@ -29,11 +29,15 @@ class RubikNode {
         void makeNode(Rubik,RubikNode *,char,int);
         void makeRootNode(Rubik state);
         bool isGoal();
-        void generateChildren();
+        RubikNode getChild(int);
+        int numberOfChildren();
         std::list<char> extractSolution(); 
         int getCost();
         Rubik getState();
         std::list<RubikNode> getChildren();
+    private:
+        std::list<RubikNode> generateChildren();
+
 };
 
 #endif

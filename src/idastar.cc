@@ -43,13 +43,10 @@ Solution IDdfs(RubikNode node, int limit, Rubikpd rpd) {
     }
 
     int newlimit = INT_MAX;
-    node.generateChildren();
-    list<RubikNode> children = node.getChildren();
-    for (list<RubikNode>::iterator it = children.begin(); 
-                                    it != children.end(); 
-                                    it++) {
-
-        RubikNode node1 = *it;
+    int number_children = node.numberOfChildren();
+    int i;
+    for (i = 0; i < number_children; i++) {
+        RubikNode node1 = node.getChild(i);
         Solution sol;
         sol = IDdfs(node1, limit, rpd);
         if (! sol.path.empty()) 
