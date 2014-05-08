@@ -15,6 +15,7 @@
 
 using namespace std;
 
+
 /**
   * Make a node
   * @param 'sate'  : Rubik's cube
@@ -24,7 +25,7 @@ using namespace std;
   */
 
 void RubikNode::makeNode(Rubik state, RubikNode *parent,
-                     char action, int cost) {
+                         char action, int cost) {
 
     this->state = state;
     this->parent = parent;
@@ -55,13 +56,10 @@ bool RubikNode::isGoal() {
 
 
 /**
-  * Generates children of this node 
+  * Gets i-th child
+  * @param 'i'  :  valid i-th child
   *
   * @section Description
-  *
-  * generateChildren only generates good children.
-  * It takes in count the action of the current Rubik node, reducing 
-  * repeated nodes generation
   *
   * Actions are as follow:
   *    A  -> 90 degrees left face 
@@ -73,54 +71,8 @@ bool RubikNode::isGoal() {
   *    P  -> 90 degrees back face
   *    Q  -> 180 degrees back face
   *    R  -> -90 degrees back face
-  */
-
-list<RubikNode> RubikNode::generateChildren() {
-    //Left: ABC, Right: DEF, Top:GHI, Bottom:JKL, Front:MNO, Back:PQR
-    char moves[18] = {
-                'A', 'B', 'C',   //Moves for left face
-                'D', 'E', 'F',   //Moves for right face
-                'G', 'H', 'I',   //Moves for top face
-                'J', 'K', 'L',   //Moves for bottom face
-                'M', 'N', 'O',   //Moves for front face
-                'P', 'Q', 'R',   //Moves for back face
-    };
-
-    int excl1 = -1;     //Used for excluding moves
-    int excl2 = -1;     //Used for excluding moves
-
-    switch (this->action) {
-        case '\x00': break;    //root node case
-        case 'A': case 'B': case 'C':  excl1 = 0; excl2 = 0; break;     
-        case 'D': case 'E': case 'F':  excl1 = 0; excl2 = 1; break;  
-        case 'G': case 'H': case 'I':  excl1 = 2; excl2 = 2; break; 
-        case 'J': case 'K': case 'L':  excl1 = 2; excl2 = 3; break;
-        case 'M': case 'N': case 'O':  excl1 = 4; excl2 = 4; break;  
-        case 'P': case 'Q': case 'R':  excl1 = 4; excl2 = 5; break; 
-    };
-
-    list<Rubik> succ = this->state.getSucc();      //successors of cube
-    list<RubikNode> children;                      //children of this node
-
-    int i = 0;
-    for (list<Rubik>::iterator it = succ.begin(); it != succ.end(); it++) {
-        if ((i / 3) == excl1 || (i / 3) == excl2) {
-            i++;
-            continue;
-        }
-        RubikNode node;
-        node.makeNode((*it), this, moves[i], this->cost + 1);
-        children.push_back(node);
-        i++;
-    }
-
-    return children;
-};
-
-
-/**
-  * Gets i-th child
-  * @param 'i'  :  valid i-th child
+  *
+  *    
   * @return A valid child
   */
 
@@ -229,14 +181,4 @@ int RubikNode::getCost() {
 
 Rubik RubikNode::getState() {
     return this->state;
-};
-
-
-/**
-  * Returns the list of children
-  * @return this->children
-  */
-
-list<RubikNode> RubikNode::getChildren() {
-    return this->children;
 };

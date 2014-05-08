@@ -16,9 +16,8 @@
 #include "rubikpd.hh"
 #include <list>
 
-
 /*
- * IDA* class
+ * Type of the solution
  */
 typedef struct Solution Solution;
 

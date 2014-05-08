@@ -20,7 +20,7 @@ using namespace std;
 
 
 /**
-  * Set all cubies to '\x00'
+  * Sets all cubies to '\x00'
   */
 
 void Rubik::clean() {
@@ -31,7 +31,7 @@ void Rubik::clean() {
 
 
 /**
-  * Print This Rubik's cube configuration
+  * Prints This Rubik's cube configuration
   */
 
 void Rubik::print() {
@@ -66,7 +66,7 @@ void Rubik::print() {
 
 
 /**
-  * Convert this Rubik's cube configuration into the goal configuration
+  * Converts this Rubik's cube configuration into the goal configuration
   */
 
 void Rubik::transformToGoal() {
@@ -221,6 +221,7 @@ void Rubik::turn(int face, int times) {
         (this->*moves[face])();
 
 }
+
 
 /**
   * Turns 90 degrees the left face clockwise

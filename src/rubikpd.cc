@@ -19,6 +19,8 @@ using namespace std;
 
 /**
   * Returns the maximum value between the three pattern databases
+  * @param 'cube'  :  state
+  * @return The maximum value between the three paterrn databases
   */
 
 int Rubikpd::heuristic(Rubik cube) {
@@ -30,19 +32,12 @@ int Rubikpd::heuristic(Rubik cube) {
     int he1 = this->edges1[ranke1];
     int he2 = this->edges2[ranke2];
 
-    printf("hcorners = %d ---- he1 = %d --- he2 = %d\n",hcorners,he1,he2);
-
     //Get maximum value
-    int max;
-    if ((hcorners >= he1) && (hcorners >= he2))
-        max = hcorners;
-    else if ((he1 >= hcorners) && (he1 >= he2))
-        max = he1;
-    else
-        max = he2;
+    
+    int h = max(hcorners, he1);
+    h = max(h, he2);
 
-    return max;
-
+    return h;
 };
 
 
@@ -125,6 +120,7 @@ void Rubikpd::initializeAll() {
   */
 
 void Rubikpd::initializeCorners() {
+    printf("----Initializing corners\n");
     //initialize every cost in 255 
     int i;
     for (i = 0; i < 264539520; i++) 
@@ -177,6 +173,7 @@ void Rubikpd::initializeCorners() {
   */
 
 void Rubikpd::initializeEdges(int table) {
+    printf("----Initializing edges%d\n",table);
     unsigned char *edges[2] = {this->edges1, this->edges2}; 
     int t = table - 1;  //index of edges
 
@@ -537,7 +534,7 @@ Rubik Rubikpd::unrankE(int table, int p) {
     cube.clean();
 
     Rubik positions = this->unrankEdgesP(table, p / t);
-    Rubik all = this->unrankEdgesO(table, p % t, positions);
+    Rubik all = this->unrankEdgesAux(table, p % t, positions);
 
     return all;
 };
@@ -591,14 +588,14 @@ Rubik Rubikpd::unrankEdgesP(int table, int x) {
 
 
 /**
-  * Gets a Rubik's cube configuration without positions (only orientations)
-  * from an integer value between 0 and 63 (ranked orientation permutations)
+  * Gets a Rubik's cube configuration mergin positions and orientations
+  * This is an auxiliary method for unrankE
   * @param 'x' : permutation of corner orientations represented as an integer
   * @param 'positions' : Rubik's cube configuration with its positions
   * @return Rubik's cube configuration
   */
 
-Rubik Rubikpd::unrankEdgesO(int table, int x, Rubik positions) {
+Rubik Rubikpd::unrankEdgesAux(int table, int x, Rubik positions) {
     Rubik cube;
     cube = positions.clone();
     int i;

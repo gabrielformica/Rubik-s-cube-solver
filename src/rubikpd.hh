@@ -69,8 +69,8 @@ class Rubikpd {
 
         //Methods to unrank permutation of edges cubies in edges1
         Rubik unrankE(int,int);
-        Rubik unrankEdgesP(int,int);        //Edge Positions 
-        Rubik unrankEdgesO(int,int,Rubik);  //Edge Orientations
+        Rubik unrankEdgesP(int,int);          //Edge Positions 
+        Rubik unrankEdgesAux(int,int,Rubik);  //Auxiliary method
 };
 
 #endif

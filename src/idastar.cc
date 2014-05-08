@@ -21,6 +21,7 @@ using namespace std;
 
 Rubikpd rpd;
 
+
 /**
   * Bounded DFS
   * @param 'node'  :  A RubikNode element

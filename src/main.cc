@@ -14,7 +14,7 @@ using namespace std;
 int main() {
 
     Rubikpd rpd;
-    //printf("\nInitializing pattern databases\n\n");
+    printf("\nInitializing pattern databases\n\n");
     //rpd.initializeAll();   //Uncomment this if there isn't precalculated rpd
     rpd.initializeAllWithFiles(); //Comment this if you uncomment initializeAll
     
