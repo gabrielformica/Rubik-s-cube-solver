@@ -14,15 +14,13 @@ using namespace std;
 int main() {
 
     Rubikpd rpd;
-    printf("\nInitializing pattern databases\n\n");
+    //printf("\nInitializing pattern databases\n\n");
     //rpd.initializeAll();   //Uncomment this if there isn't precalculated rpd
     rpd.initializeAllWithFiles(); //Comment this if you uncomment initializeAll
+    
     Rubik cube;
-    /*
     cube.random();  //Random instance
-    */
-    cube.transformToGoal();
-    cube.turnLeft();
+
     printf("-----------------------------------------------\n");
     printf("Solving this random Rubik's cube configuration: \n");
     cube.print();
@@ -33,5 +31,4 @@ int main() {
     solution = IDAstar(cube, rpd);
 
     print_solution(solution);
-
 }
