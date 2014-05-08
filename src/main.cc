@@ -18,7 +18,11 @@ int main() {
     //rpd.initializeAll();   //Uncomment this if there isn't precalculated rpd
     rpd.initializeAllWithFiles(); //Comment this if you uncomment initializeAll
     Rubik cube;
+    /*
     cube.random();  //Random instance
+    */
+    cube.transformToGoal();
+    cube.turnLeft();
     printf("-----------------------------------------------\n");
     printf("Solving this random Rubik's cube configuration: \n");
     cube.print();

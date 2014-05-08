@@ -43,6 +43,9 @@ class Rubik {
         void turnBack();
         bool isSolved();
         std::list<Rubik> getSucc();
+        bool isMaxOriented(int);
+        void setMaxOrientation(int);
+        void setMinOrientation(int);
         unsigned int getPosition(int);
         unsigned int getOrientation(int);
     private:

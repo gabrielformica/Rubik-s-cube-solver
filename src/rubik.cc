@@ -504,6 +504,71 @@ list<Rubik> Rubik::getSucc() {
 
 
 /**
+  * Says if i-th cubie has its maximum value for orientation
+  * @param 'i'  :   i-th cubie  
+  * @return True, if its orientation is the max value. False in any other case
+  */
+
+bool Rubik::isMaxOriented(int i) {
+    int position = this->getPosition(i);
+    int orientation = this->getOrientation(i);
+
+    if (position < 16) {
+        if (orientation == 4)
+            return true;
+        return false;
+    }
+    else {
+        if (orientation == 2)
+            return true;
+        return false;
+    }
+};
+
+
+/**
+  * Sets maximum orientation i-th cubie
+  * @param 'i'  :  i-th edge cubie
+  */
+
+void Rubik::setMaxOrientation(int i) {
+    int position = this->getPosition(i);
+    unsigned char mask = '\xF8';  // 1111 1 000
+    unsigned char cubie = this->getCubie(i) & mask;
+
+    if (position < 16) {
+        this->setCubie(i, cubie | '\x04');  //x-axis oriented
+    }
+    else {
+        this->setCubie(i, cubie | '\x02');  //y-axis oriented
+    }
+};
+
+
+/**
+  * Sets minimun orientation i-th 
+  * @param 'i'  :  i-th cubie
+  */
+
+void Rubik::setMinOrientation(int i) {
+    int position = this->getPosition(i);
+    unsigned char mask = '\xF8';  // 1111 1 000
+    unsigned char cubie = this->getCubie(i) & mask;
+
+    switch (position) {
+        case 0: case 1: case 2: case 4: case 5: case 6:      //Left face
+        case 8: case 9: case 10: case 12: case 13: case 14:  //Right face
+        case 16: case 17: case 18: case 19:                  //Middle face
+            this->setCubie(i, cubie | '\x01');    //z-axis oriented
+            break;
+        default :                                 //3 , 7, 11, 15
+            this->setCubie(i, cubie | '\x02');
+            break;
+    }
+};
+
+
+/**
   * Gets last 5 bits from i-th cubie 
   * @param 'i': i-th cubie
   * @return position 

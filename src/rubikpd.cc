@@ -22,13 +22,15 @@ using namespace std;
   */
 
 int Rubikpd::heuristic(Rubik cube) {
-    int rankc = this->rankC(cube);
-    int ranke1 = this->rankE(1, cube);
-    int ranke2 = this->rankE(2, cube);
+    int rankc = this->rankC(cube.clone());
+    int ranke1 = this->rankE(1, cube.clone());
+    int ranke2 = this->rankE(2, cube.clone());
 
     int hcorners = this->corners[rankc];
     int he1 = this->edges1[ranke1];
     int he2 = this->edges2[ranke2];
+
+    printf("hcorners = %d ---- he1 = %d --- he2 = %d\n",hcorners,he1,he2);
 
     //Get maximum value
     int max;
@@ -471,7 +473,7 @@ void Rubikpd::auxiliaryRankEdgesP(int *positions, int *set, int *inverse) {
     for (i = 0; i < 6; i++)
         appear[positions[i]] = 1;
 
-    //Edgesid elements are the last K-elements 
+    //Positions elements are the last K-elements 
     for (i = 6; i < 12; i++)    
         set[i] = positions[i % 6];
 
@@ -505,14 +507,14 @@ int Rubikpd::rankEdgesO(int table, Rubik cube) {
     //Left or Right face
     int i;
     for (i = 1; i <= 7; i = i + 2) {
-        if (cube.getOrientation(i + offset) == 4) 
+        if (cube.isMaxOriented(i + offset)) 
             rank = rank + 1;
         rank = rank*2;
     }
 
     //Middle face
     for (i = 0; i < 2; i++) {
-        if (cube.getOrientation(16 + i + (offset / 4)) == 2)
+        if (cube.isMaxOriented(16 + i + (offset / 4)))
             rank = rank + 1;
         rank = rank * 2;
     }
@@ -535,16 +537,9 @@ Rubik Rubikpd::unrankE(int table, int p) {
     cube.clean();
 
     Rubik positions = this->unrankEdgesP(table, p / t);
-    Rubik orientations = this->unrankEdgesO(table, p % t);
+    Rubik all = this->unrankEdgesO(table, p % t, positions);
 
-    int i;
-    for (i = 0; i < 20; i++) {
-        //Merge ID with orientation to get final cubie
-        unsigned char cubie = positions.getCubie(i) | orientations.getCubie(i);
-        cube.setCubie(i, cubie);
-    }
-
-    return cube;
+    return all;
 };
 
 
@@ -599,12 +594,13 @@ Rubik Rubikpd::unrankEdgesP(int table, int x) {
   * Gets a Rubik's cube configuration without positions (only orientations)
   * from an integer value between 0 and 63 (ranked orientation permutations)
   * @param 'x' : permutation of corner orientations represented as an integer
+  * @param 'positions' : Rubik's cube configuration with its positions
   * @return Rubik's cube configuration
   */
 
-Rubik Rubikpd::unrankEdgesO(int table, int x) {
+Rubik Rubikpd::unrankEdgesO(int table, int x, Rubik positions) {
     Rubik cube;
-    cube.clean();
+    cube = positions.clone();
     int i;
     int y = x;
     int offset = (table-1)*8;
@@ -617,36 +613,37 @@ Rubik Rubikpd::unrankEdgesO(int table, int x) {
         
         unsigned char cubie;
 
-        if  ((k == 1 + offset) || (k == 5 + offset)) {
-            cubie = 1;
-            if (di == 1) 
-                cubie = 4;
+        if (di == 1) {
+            cube.setMaxOrientation(k);
         }
-        else if ((k == 3 + offset) || (k == 7 + offset)) {
-            cubie = 2;
-            if (di == 1) 
-                cubie = 4;
+        else {
+            cube.setMinOrientation(k);
         }
 
-        cube.setCubie(k, cubie);
         k = k + 2;
     }
 
     //Last two cubies this->middle[x], this->middle[x+1]
-    unsigned char cubie;
+    k = 16 + (offset / 4); 
     int di = y / 2;
     y = y - (di*2);
-    cubie = 1;
-    if (di == 1)
-        cubie = 2;
 
-    cube.setCubie(16 + (offset /4), cubie);
+    if (di == 1) {
+        cube.setMaxOrientation(k);
+    }
+    else {
+        cube.setMinOrientation(k);
+    }
+
+    k++;
+
     di = y;
-    cubie = 1;
-    if (di == 1)
-        cubie = 2;
-    
-    cube.setCubie(17 + (offset /4), cubie);
+    if (di == 1) {
+        cube.setMaxOrientation(k);
+    }
+    else {
+        cube.setMinOrientation(k);
+    }
     
     return cube;
 };

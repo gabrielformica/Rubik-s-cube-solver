@@ -8,6 +8,7 @@
   * Rubik's cube node class definition 
   */
 
+#include <stdio.h>
 #include <string>
 #include "rubiknode.hh"
 #include "rubik.hh"
@@ -149,8 +150,8 @@ RubikNode RubikNode::getChild(int child) {
 
     int j;
     int i = -1;
-    //Get what is the i-th child to this node!
-    for (j = 0; j < 18 && i < child; j++) {
+    //Get the i-th child to this node!
+    for (j = 0; (j < 18) && (i < child); j++) {
         if ((j/ 3) == excl1 || (j / 3) == excl2) {
             continue;
         }
@@ -177,7 +178,20 @@ RubikNode RubikNode::getChild(int child) {
   */
 
 int RubikNode::numberOfChildren() {
-    return this->generateChildren().size();
+    int number = -1;
+    switch (this->action) {
+        case '\x00': number = 18; break;    //root node case
+        case 'A': case 'B': case 'C': number = 15; break;     
+        case 'D': case 'E': case 'F': number = 12; break;  
+        case 'G': case 'H': case 'I': number = 15; break; 
+        case 'J': case 'K': case 'L': number = 12; break;
+        case 'M': case 'N': case 'O': number = 15; break;  
+        case 'P': case 'Q': case 'R': number = 12; break; 
+    };
+
+    if (number == -1) 
+        printf("Aqui fue\n");
+    return number;
 };
 
 
@@ -189,9 +203,9 @@ int RubikNode::numberOfChildren() {
 list<char> RubikNode::extractSolution() {
     list<char> path; 
     RubikNode *temp;
-    temp = this->parent;
+    temp = this;
     while (temp != NULL) {
-        path.push_back(this->action);
+        path.push_back(temp->action);
         temp = temp->parent;
     }
     return path;

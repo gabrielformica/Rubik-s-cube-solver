@@ -28,7 +28,7 @@ struct Solution {
 };
 
 
-extern Solution IDdfs(RubikNode,int,Rubikpd);
+extern Solution IDdfs(RubikNode,int);
 
 extern Solution IDAstar(Rubik,Rubikpd);
 

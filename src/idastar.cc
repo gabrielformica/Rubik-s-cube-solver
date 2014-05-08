@@ -19,13 +19,15 @@
 
 using namespace std;
 
+Rubikpd rpd;
+
 /**
   * Bounded DFS
   * @param 'node'  :  A RubikNode element
   * @param 'cost'  :  Cost of the path
   */
 
-Solution IDdfs(RubikNode node, int limit, Rubikpd rpd) {
+Solution IDdfs(RubikNode node, int limit) {
     int gcost = node.getCost();
     int hcost = rpd.heuristic(node.getState());
 
@@ -47,12 +49,11 @@ Solution IDdfs(RubikNode node, int limit, Rubikpd rpd) {
     int i;
     for (i = 0; i < number_children; i++) {
         RubikNode node1 = node.getChild(i);
-        Solution sol;
-        sol = IDdfs(node1, limit, rpd);
+        Solution sol = IDdfs(node1, limit);
         if (! sol.path.empty()) 
             return sol;
 
-        newlimit = min(newlimit, sol.cost);
+        newlimit = min(sol.cost, newlimit);
     }
 
     Solution sol;
@@ -70,14 +71,15 @@ Solution IDdfs(RubikNode node, int limit, Rubikpd rpd) {
   * @return Optimal solution      
   */
 
-Solution IDAstar(Rubik problem, Rubikpd rpd) {
+Solution IDAstar(Rubik problem, Rubikpd pdb) {
+    rpd = pdb;
     RubikNode node;
     node.makeRootNode(problem);
     int limit = rpd.heuristic(node.getState());
 
     while (limit < INT_MAX) {
-        Solution sol = IDdfs(node, limit, rpd);
-        if  (! sol.path.empty())
+        Solution sol = IDdfs(node, limit);
+        if  (! sol.path.empty()) 
             return sol;
         limit  = sol.cost;
     }
@@ -94,15 +96,17 @@ Solution IDAstar(Rubik problem, Rubikpd rpd) {
   */
 
 void print_solution(Solution solution) {
-    if (solution.path.empty()) {
+    //When cube can't be solved
+    if (solution.cost == INT_MAX) {
         printf("The cube can't be solved\n");
         return;
     }
 
-    printf("-------Total number of moves maded :  %d\n",solution.path.size());
-    for (list<char>::iterator it = solution.path.begin();
-                              it != solution.path.end();
-                              it++) {
+    int moves_maded = solution.path.size() - 1;
+    printf("-------Total number of moves maded :  %d\n", moves_maded);
+    for (list<char>::reverse_iterator it = solution.path.rbegin();
+                              it != solution.path.rend();
+                              ++it) {
         char move = *(it);
         switch (move) {
             //left face

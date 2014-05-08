@@ -18,7 +18,7 @@
  * Rubik node class
  */
 class RubikNode {
-    private:
+    public:
         Rubik state;                  //cube
         RubikNode *parent;
         char action;
