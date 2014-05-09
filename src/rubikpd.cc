@@ -49,6 +49,7 @@ int Rubikpd::heuristic(Rubik cube) {
   */
 
 void Rubikpd::initializeAllWithFiles() {
+    printf("\nInitializing pattern databases from files\n\n");
     this->initializeCornersWithFile();
     this->initializeEdgesWithFile(1);
     this->initializeEdgesWithFile(2);
@@ -92,7 +93,6 @@ void Rubikpd::initializeEdgesWithFile(int table) {
     else 
         fp = fopen("edges2.bin", "rb");
 
-
     int i;
     for (i = 0; i < 42577920; i++) {
         int x;
@@ -109,6 +109,7 @@ void Rubikpd::initializeEdgesWithFile(int table) {
   */
 
 void Rubikpd::initializeAll() {
+    printf("\nInitializing pattern databases\n\n");
     this->initializeCorners();
     this->initializeEdges(1);  //edges1  
     this->initializeEdges(2);  //edges2

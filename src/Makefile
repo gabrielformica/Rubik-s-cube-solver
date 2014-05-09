@@ -1,15 +1,15 @@
 OBJSM = main.o rubik.o rubikpd.o rubiknode.o utils.o idastar.o
-OBJSRPD = rubikpd.o rubik.o utils.o
+OBJSRPD = loadpdb.o rubikpd.o rubik.o utils.o
 CFLAGS = -c
 CC = g++
 
-all: main 
+all: main pdb 
 
 main: $(OBJSM)
 	$(CC) $(OBJSM) -o main 
 
-rubikpd: $(OBJSRPD)
-	$(CC) $(OBJSRPD) -o rubikpd
+pdb: $(OBJSRPD)
+	$(CC) $(OBJSRPD) -o pdb
 
 main.o: rubik.hh rubikpd.hh
 	$(CC) $(CFLAGS) main.cc
@@ -29,5 +29,8 @@ rubikpd.o: rubikpd.hh utils.hh rubik.hh
 utils.o: utils.hh 
 	$(CC) $(CFLAGS) utils.cc 
 
+loadpdb.o: rubikpd.hh
+	$(CC) $(CFLAGS) loadpdb.cc
+
 clean:
-	rm -f main rubikpd *.o
+	rm -f main pdb *.o
