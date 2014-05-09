@@ -141,8 +141,6 @@ int RubikNode::numberOfChildren() {
         case 'P': case 'Q': case 'R': number = 12; break; 
     };
 
-    if (number == -1) 
-        printf("Aqui fue\n");
     return number;
 };
 
