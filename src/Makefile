@@ -1,7 +1,7 @@
 OBJSM = main.o rubik.o rubikpd.o rubiknode.o utils.o idastar.o
 OBJSRPD = loadpdb.o rubikpd.o rubik.o utils.o
 CFLAGS = -c
-CC = g++
+CC = g++ 
 
 all: main pdb 
 

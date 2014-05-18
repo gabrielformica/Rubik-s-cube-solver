@@ -1,5 +1,6 @@
 .*
 !.gitignore
 main
+pdb
 *.o
 *.pdf
